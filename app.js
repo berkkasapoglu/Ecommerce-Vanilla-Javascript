@@ -50,24 +50,40 @@ const loadProducts = async function () {
         })
 };
 loadProducts();
-const updateProdBtn = (prodId) => {
-    const prodBtns = prods.querySelectorAll('#addCart');
+const updateProdBtn = (prodId,cartType) => {
+    const prodBtns = prods.querySelectorAll(cartType);
     const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
     let btnFlag = parseInt(prodBtn.value);
-    prodBtn.classList.toggle("btn-primary");
-    prodBtn.classList.toggle("is-added");
-    if (!btnFlag) {
-        prodBtn.innerText = "Added";
-        prodBtn.value = 1;
-    } else {
-        prodBtn.innerText = "Add To Cart";
-        prodBtn.value = 0;
+    if(cartType === '#addCart') {
+        prodBtn.classList.toggle("btn-primary");
+        prodBtn.classList.toggle("is-added");
+        if (!btnFlag) {
+            prodBtn.innerText = "Added";
+            prodBtn.value = 1;
+        } else {
+            prodBtn.innerText = "Add To Cart";
+            prodBtn.value = 0;
+        }
+    } else if(cartType === '#addSaved') {
+        console.log(cartType)
+        
+        if (!btnFlag) {
+            prodBtn.value = 1;
+            prodBtn.classList.remove('far');
+            prodBtn.classList.add('fas');
+        } else {
+            prodBtn.value = 0;
+            prodBtn.classList.remove('fas');
+            prodBtn.classList.add('far');
+        }
     }
 }
 
-// ---------------------------------------
 
+// ---------------------------------------
+let cartType;
 prods.addEventListener('click', function (ev) {
+    
     const prodItems = prods.querySelectorAll(".product")
     const prodItem = [...prodItems].find((element) => {
         return element === ev.target.closest('[data-id]')
@@ -76,22 +92,24 @@ prods.addEventListener('click', function (ev) {
     const prodBtn = prodItem.querySelector('#addCart');
     const addFavBtn = prodItem.querySelector('#addSaved');
     if (ev.target.nodeName === "BUTTON") {
+        cartType = '#addCart';
         if (!parseInt(prodBtn.value)) {
             addToCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId);
+            updateProdBtn(prodId,cartType);
         }
         else {
             removeFromCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId);
+            updateProdBtn(prodId,cartType);
         }
     } else if (ev.target.nodeName === "I") {
+        cartType = '#addSaved';
         if (!parseInt(addFavBtn.value)) {
-            addFavBtn.classList.remove('far');
-            addFavBtn.classList.add('fas');
             addToCart(prodId, savedSect, savedItems);
+            updateProdBtn(prodId,cartType);
         }
         else {
             removeFromCart(prodId, savedSect, savedItems);
+            updateProdBtn(prodId,cartType);
         }
     }
 })
@@ -234,14 +252,15 @@ for (let section of cartProd) {
     section.addEventListener('click', (ev) => {
         if (ev.target.nodeName === "BUTTON") {
             if (ev.target.closest('.product_section')) {
-                console.log('cart')
                 const prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
                 removeFromCart(prodId, prodSect, cartItems);
-                updateProdBtn(prodId);
+                cartType = '#addCart';
+                updateProdBtn(prodId, cartType);
             } else if (ev.target.closest('.saved_section')) {
-                console.log('saved')
+                cartType = '#addSaved';
                 const prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
                 removeFromCart(prodId, savedSect, savedItems);
+                updateProdBtn(prodId, cartType);
             }
         }
     })

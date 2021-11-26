@@ -50,11 +50,11 @@ const loadProducts = async function () {
         })
 };
 loadProducts();
-const updateProdBtn = (prodId,cartType) => {
+const updateProdBtn = (prodId, cartType) => {
     const prodBtns = prods.querySelectorAll(cartType);
     const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
     let btnFlag = parseInt(prodBtn.value);
-    if(cartType === '#addCart') {
+    if (cartType === '#addCart') {
         prodBtn.classList.toggle("btn-primary");
         prodBtn.classList.toggle("is-added");
         if (!btnFlag) {
@@ -64,9 +64,7 @@ const updateProdBtn = (prodId,cartType) => {
             prodBtn.innerText = "Add To Cart";
             prodBtn.value = 0;
         }
-    } else if(cartType === '#addSaved') {
-        console.log(cartType)
-        
+    } else if (cartType === '#addSaved') {
         if (!btnFlag) {
             prodBtn.value = 1;
             prodBtn.classList.remove('far');
@@ -83,7 +81,7 @@ const updateProdBtn = (prodId,cartType) => {
 // ---------------------------------------
 let cartType;
 prods.addEventListener('click', function (ev) {
-    
+
     const prodItems = prods.querySelectorAll(".product")
     const prodItem = [...prodItems].find((element) => {
         return element === ev.target.closest('[data-id]')
@@ -95,21 +93,21 @@ prods.addEventListener('click', function (ev) {
         cartType = '#addCart';
         if (!parseInt(prodBtn.value)) {
             addToCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId,cartType);
+            updateProdBtn(prodId, cartType);
         }
         else {
             removeFromCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId,cartType);
+            updateProdBtn(prodId, cartType);
         }
     } else if (ev.target.nodeName === "I") {
         cartType = '#addSaved';
         if (!parseInt(addFavBtn.value)) {
             addToCart(prodId, savedSect, savedItems);
-            updateProdBtn(prodId,cartType);
+            updateProdBtn(prodId, cartType);
         }
         else {
             removeFromCart(prodId, savedSect, savedItems);
-            updateProdBtn(prodId,cartType);
+            updateProdBtn(prodId, cartType);
         }
     }
 })
@@ -226,6 +224,7 @@ const addToCart = function (prodId, cartSection, cartList) {
                 } else {
                     cartSection.innerHTML += htmlText;
                 }
+                updateCartHeader(cartSection);
             }
         })
 }
@@ -245,6 +244,7 @@ const removeFromCart = function (prodId, cartSection, cartList) {
     removedItem.parentElement.remove();
     const removedItemId = cartList.find((element) => element.id === prodId);
     cartList.splice(cartList.indexOf(removedItemId), 1);
+    updateCartHeader(cartSection);
 }
 
 // Event Listener to delete button on cart
@@ -266,7 +266,17 @@ for (let section of cartProd) {
     })
 }
 
+// Update items size in cart header
+const updateCartHeader = (cartSection) => {
+    const savedHeader = favBtn.querySelector("#savedItemSize");
+    const cartHeader = cartBtn.querySelector("#cartItemSize");
+    if (cartSection.classList.contains('saved_section')) {
+        savedHeader.innerText = savedItems.length;
+    } else {
+        cartHeader.innerText = cartItems.length;
+    }
 
+}
 
 for (let link of navbarLinks) {
     link.addEventListener('click', openCart);

@@ -276,7 +276,6 @@ button {
     font-size: 1.3em;
     cursor: pointer;
     color: crimson;
-    transition: ease-in .3s;
 }
 
 

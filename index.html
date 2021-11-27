@@ -11,30 +11,50 @@
 
 </head>
 <body>
-    <nav class="bg-primary navbar row">
-        <a href=""><img src="images/logo.png" alt="logo" class="logo"></a>
-        <form action="" class="search_form">
-            <div class="search_bar">
-                <input type="text" placeholder="Search Product.." class="search_input">
-                <button class="fas fa-search"></button>
+    <header>
+        <nav class="navbar row">
+            <a href=""><img src="images/logo.png" alt="logo" class="logo"></a>
+            <form action="" class="search_form">
+                <div class="search_bar">
+                    <input type="text" placeholder="Search Product.." class="search_input">
+                    <button class="fas fa-search"></button>
+                </div>
+            </form>
+            <div class="right row toggle_bar">
+                <a href="" class="navbar_link accountMenu"><i class="fas fa-user-circle"></i>My Account</a>
+                <a href="" class="navbar_link" id="favouriteMenu"><i class="fas fa-bookmark"></i>Favourites</a>
+                <a href="" class="navbar_link" id="cartMenu"><i class="fas fa-cart-plus"></i>Cart</a>
             </div>
-        </form>
-        <div class="right row toggle_bar">
-            <a href="" class="navbar_link accountMenu"><i class="fas fa-user-circle"></i>My Account</a>
-            <a href="" class="navbar_link" id="favouriteMenu"><i class="fas fa-bookmark"></i>Favourites</a>
-            <a href="" class="navbar_link" id="cartMenu"><i class="fas fa-cart-plus"></i>Cart</a>
-        </div>
-        <i class="fas fa-bars" id="toggleBar"></i>
-    </nav>
-    <header class="header_full">
-        <div class="container row header_section section_space">
-            <div class="header_content">
-                <h2 class="header_tag">PHONES FOR YOU</h2>
-                <h4 class="subheader_tag">Check out for latest prices.</h4>
-                <button class="btn btn-primary">SHOP NOW</button>
+            <i class="fas fa-bars" id="toggleBar"></i>
+        </nav>
+        <div class="slider header_full">
+            <div class="container row header_section section_space slide">
+                <div class="header_content">
+                    <h2 class="header_tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader_tag">Check out for latest prices.</h4>
+                    <button class="btn btn-primary">SHOP NOW</button>
+                </div>
+                <img src="images/banner_01.png" alt="" class="header_img">
             </div>
-            <img src="images/banner_01.png" alt="" class="header_img">
+            <div class="container row header_section section_space slide">
+                <div class="header_content">
+                    <h2 class="header_tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader_tag">Check out for latest prices.</h4>
+                    <button class="btn btn-primary">SHOP NOW</button>
+                </div>
+                <img src="images/banner_02.png" alt="" class="header_img">
+            </div>
+            <div class="container row header_section section_space slide">
+                <div class="header_content">
+                    <h2 class="header_tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader_tag">Check out for latest prices.</h4>
+                    <button class="btn btn-primary">SHOP NOW</button>
+                </div>
+                <img src="images/collection_01.png" alt="" class="header_img">
+            </div>
         </div>
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
     </header>
     <section class="">
         <div class="container products section_space row">
@@ -86,12 +106,13 @@
         <div class="cart_bottom">
             <div class="row">
                 <h3 class="header_tag">TOTAL</h3>
-                <h4 class="price">990$</h4>
+                <h4 class="price"><span id="totalPrice">0</span>$</h4>
             </div>
             <button class="btn-secondary"><span class="btn-text">CONTINUE</span></button>
         </div> 
     </div>
     <script src="data/products.json"></script>
-    <script src="app.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/slider.js"></script>
 </body>
 </html>

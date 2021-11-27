@@ -131,26 +131,19 @@ const switchBtns = function () {
         if (this.id === "cartBtn") {
             prodSect.classList.add("is-visible");
             savedSect.classList.remove("is-visible");
+            updateCartNumbers(prodSect);
         } else {
             savedSect.classList.add('is-visible');
             prodSect.classList.remove("is-visible");
+            updateCartNumbers(savedSect);
         }
         for (let btn of btns) {
             if (btn != this) btn.classList.remove('is-active');
         }
     }
-
-    // for (let btn of btns) {
-    //     if (!btn.classList.contains("is-active")) {
-    //         this.classList.toggle("is-active");
-    //         prodSect.classList.add('is-visible'); 
-    //         continue;
-    //     }
-    //     btn.classList.toggle("is-active");
-    //     savedSect.classList.toggle('is-visible')
-    //     prodSect.classList.remove('is-visible'); 
-    // }
 }
+
+
 // ---------------------------------------
 
 // Opens Cart
@@ -165,12 +158,14 @@ const openCart = function (ev) {
         favBtn.classList.add("is-active");
         savedSect.classList.add("is-visible");
         prodSect.classList.remove("is-visible");
+        updateCartNumbers(savedSect);
     }
     else {
         cartBtn.classList.add("is-active");
         favBtn.classList.remove("is-active");
         prodSect.classList.add("is-visible");
         savedSect.classList.remove("is-visible");
+        updateCartNumbers(prodSect);
     }
 }
 // ---------------------------------------
@@ -224,7 +219,7 @@ const addToCart = function (prodId, cartSection, cartList) {
                 } else {
                     cartSection.innerHTML += htmlText;
                 }
-                updateCartHeader(cartSection);
+                updateCartNumbers(cartSection);
             }
         })
 }
@@ -244,7 +239,7 @@ const removeFromCart = function (prodId, cartSection, cartList) {
     removedItem.parentElement.remove();
     const removedItemId = cartList.find((element) => element.id === prodId);
     cartList.splice(cartList.indexOf(removedItemId), 1);
-    updateCartHeader(cartSection);
+    updateCartNumbers(cartSection);
 }
 
 // Event Listener to delete button on cart
@@ -266,17 +261,21 @@ for (let section of cartProd) {
     })
 }
 
-// Update items size in cart header
-const updateCartHeader = (cartSection) => {
+// Update items size in cart header and total price
+const updateCartNumbers = (cartSection) => {
     const savedHeader = favBtn.querySelector("#savedItemSize");
     const cartHeader = cartBtn.querySelector("#cartItemSize");
+    const totalPrice = document.querySelector('#totalPrice');
+
     if (cartSection.classList.contains('saved_section')) {
         savedHeader.innerText = savedItems.length;
+        totalPrice.innerText = savedItems.reduce((init,item) => init+=item.price,init=0)
     } else {
         cartHeader.innerText = cartItems.length;
+        totalPrice.innerText = cartItems.reduce((init,item) => init+=item.price,init=0)
     }
-
 }
+
 
 for (let link of navbarLinks) {
     link.addEventListener('click', openCart);

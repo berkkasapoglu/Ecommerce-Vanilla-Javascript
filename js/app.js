@@ -1,11 +1,11 @@
-let prods = document.querySelector(".products");
-let toggle = document.querySelector("#toggleBar");
-let toggleBar = document.querySelector(".toggle_bar");
+let prods = document.querySelector(".products"),
+toggle = document.querySelector("#toggleBar"),
+toggleBar = document.querySelector(".toggle_bar");
 
 
-let protection = document.querySelector(".protection");
-let cartBtn = document.querySelector("#cartBtn");
-let favBtn = document.querySelector("#favBtn");
+let protection = document.querySelector(".protection"),
+cartBtn = document.querySelector("#cartBtn"),
+favBtn = document.querySelector("#favBtn");
 const btns = [cartBtn, favBtn];
 
 let cart = document.querySelector(".cart");
@@ -153,20 +153,21 @@ const openCart = function (ev) {
     document.body.classList.add("no-scroll");
     protection.style.opacity = .4;
     protection.style.pointerEvents = "all";
+    
     if (ev.target.id == 'favouriteMenu') {
         cartBtn.classList.remove("is-active");
         favBtn.classList.add("is-active");
         savedSect.classList.add("is-visible");
         prodSect.classList.remove("is-visible");
         updateCartNumbers(savedSect);
-    }
-    else {
+    } else {
         cartBtn.classList.add("is-active");
         favBtn.classList.remove("is-active");
         prodSect.classList.add("is-visible");
         savedSect.classList.remove("is-visible");
         updateCartNumbers(prodSect);
     }
+    
 }
 // ---------------------------------------
 // Close cart page if click outside of the cart window.
@@ -282,8 +283,4 @@ for (let link of navbarLinks) {
 }
 favBtn.addEventListener('click', switchBtns);
 cartBtn.addEventListener('click', switchBtns);
-toggle.addEventListener('click', toggleMove);
-
-
-
 

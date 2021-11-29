@@ -1,27 +1,94 @@
-const prevBtn = document.querySelector(".prev")
-const nextBtn = document.querySelector(".next")
-const slides = document.querySelectorAll(".slide");
+const prevBtn = document.querySelector(".prev"),
+    nextBtn = document.querySelector(".next"),
+    slider = document.querySelector(".slider"),
+    slides = Array.from(document.querySelectorAll(".slide"));
 
-let slideIndex = 0;
-slides[slideIndex].style.display = 'flex';
-const showSlides = (n) => {
-    
-    if(n>0) {
-        slides[slideIndex].style.display = 'none';
-        slideIndex++;
-        if(slideIndex + 1 > slides.length) slideIndex = 0;
-        slides[slideIndex].style.display = 'flex';
-    }
-    else {
-        slides[slideIndex].style.display = 'none';
-        slideIndex--;
-        if(slideIndex < 0) slideIndex = slides.length - 1;
-        slides[slideIndex].style.display = 'flex';
-    }
+let isDragging = false,
+    startPos = 0,
+    prevTranslate = 0,
+    currentTranslate = 0,
+    animationID = 0,
+    currentIndex = 0;
 
+const touchStart = (index) => {
+    return function (ev) {
+        isDragging = true;
+        currentIndex = index;
+        startPos = getPositionX(ev);
+    }
 }
 
-nextBtn.addEventListener('click', () => showSlides(1));
-prevBtn.addEventListener('click', () => showSlides(-1));
+const touchEnd = () => {
+    isDragging = false;
+    cancelAnimationFrame(animationID);
 
-[a,b,c]
+    const movedBy = currentTranslate - prevTranslate;
+    if (movedBy < -100 && currentIndex < slides.length - 1) currentIndex++;
+    else if(movedBy > 100 && currentIndex > 0) currentIndex--;
+
+    setPositionByIndex();
+}
+
+const setPositionByIndex = () => {
+    currentTranslate = currentIndex * -window.innerWidth;
+    prevTranslate = currentTranslate;
+    setSliderPosition();
+}
+const touchMove = (ev) => {
+    if (isDragging) {
+        const currentPosition = getPositionX(ev);
+        currentTranslate = prevTranslate + currentPosition - startPos;
+        setSliderPosition();
+    }
+}
+const setSliderPosition = () => {
+    slider.style.transform = `translateX(${currentTranslate}px)`;
+}
+const animation = () => {
+    setSliderPosition();
+    if (isDragging) animationID = requestAnimationFrame(animation);
+}
+
+const getPositionX = (ev) => {
+    return ev.clientX;
+}
+
+slides.forEach((slide, index) => {
+    const slideImage = slide.querySelector('img');
+    slideImage.addEventListener('dragstart', (ev) => ev.preventDefault());
+
+    slide.addEventListener('touchstart', touchStart(index));
+    slide.addEventListener('touchend', touchEnd);
+    slide.addEventListener('touchmove', touchMove);
+
+    slide.addEventListener('mousedown', touchStart(index));
+    slide.addEventListener('mouseup', touchEnd);
+    slide.addEventListener('mouseleave', touchEnd);
+    slide.addEventListener('mousemove', touchMove);
+
+});
+nextBtn.addEventListener('click', () => {
+    if(currentIndex < slides.length - 1) {
+        currentIndex++;
+        setPositionByIndex();
+    }
+});
+prevBtn.addEventListener('click', () => {
+    if(currentIndex > 0) {
+        currentIndex--;
+        setPositionByIndex();
+    }
+});
+
+const sliderTimeout = () => {
+    setInterval(() => {
+        if(currentIndex < slides.length - 1) {
+            currentIndex++;
+            setPositionByIndex();
+        } else {
+            currentIndex = 0;
+            setPositionByIndex();
+        }
+    },4000);
+}
+

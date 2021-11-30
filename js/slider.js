@@ -24,8 +24,7 @@ const touchEnd = () => {
 
     const movedBy = currentTranslate - prevTranslate;
     if (movedBy < -100 && currentIndex < slides.length - 1) currentIndex++;
-    else if(movedBy > 100 && currentIndex > 0) currentIndex--;
-
+    else if (movedBy > 100 && currentIndex > 0) currentIndex--;
     setPositionByIndex();
 }
 
@@ -41,15 +40,18 @@ const touchMove = (ev) => {
         setSliderPosition();
     }
 }
+
 const setSliderPosition = () => {
     slider.style.transform = `translateX(${currentTranslate}px)`;
 }
+
 const animation = () => {
     setSliderPosition();
     if (isDragging) animationID = requestAnimationFrame(animation);
 }
 
 const getPositionX = (ev) => {
+    if (ev.type.includes('touch')) return ev.touches[0].clientX;
     return ev.clientX;
 }
 
@@ -57,24 +59,27 @@ slides.forEach((slide, index) => {
     const slideImage = slide.querySelector('img');
     slideImage.addEventListener('dragstart', (ev) => ev.preventDefault());
 
-    slide.addEventListener('touchstart', touchStart(index));
-    slide.addEventListener('touchend', touchEnd);
-    slide.addEventListener('touchmove', touchMove);
-
-    slide.addEventListener('mousedown', touchStart(index));
-    slide.addEventListener('mouseup', touchEnd);
-    slide.addEventListener('mouseleave', touchEnd);
-    slide.addEventListener('mousemove', touchMove);
-
+    if (navigator.maxTouchPoints) {
+        slide.addEventListener('touchstart', touchStart(index));
+        slide.addEventListener('touchend', touchEnd);
+        slide.addEventListener('touchmove', touchMove);
+    } else {
+        slide.addEventListener('mousedown', touchStart(index));
+        slide.addEventListener('mouseup', touchEnd);
+        slide.addEventListener('mouseleave', touchEnd);
+        slide.addEventListener('mousemove', touchMove);
+    }
 });
+
 nextBtn.addEventListener('click', () => {
-    if(currentIndex < slides.length - 1) {
+    if (currentIndex < slides.length - 1) {
         currentIndex++;
         setPositionByIndex();
     }
 });
+
 prevBtn.addEventListener('click', () => {
-    if(currentIndex > 0) {
+    if (currentIndex > 0) {
         currentIndex--;
         setPositionByIndex();
     }
@@ -82,13 +87,14 @@ prevBtn.addEventListener('click', () => {
 
 const sliderTimeout = () => {
     setInterval(() => {
-        if(currentIndex < slides.length - 1) {
+        if (currentIndex < slides.length - 1) {
             currentIndex++;
             setPositionByIndex();
         } else {
             currentIndex = 0;
             setPositionByIndex();
         }
-    },4000);
+    }, 4000);
 }
 
+sliderTimeout();

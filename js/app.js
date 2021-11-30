@@ -22,10 +22,12 @@ const fetchProductData = async function () {
     return data;
 }
 // ---------------------------------------
-const loadProducts = async function () {
+export const loadProducts = async function (ev = null) {
     fetchProductData()
         .then(data => {
+            prods.innerHTML = '';
             for (let prod of data.products) {
+                if(ev && ev.target.value !== prod.category) continue; 
                 let htmlText = `<div class="product" data-id=${prod.id}>
                             <img src=${prod.image} alt="" class="product_image">
                             <h4 class="product_header">${prod.title}</h4>
@@ -46,10 +48,10 @@ const loadProducts = async function () {
                         </div>`;
                 prods.insertAdjacentHTML('beforeend', htmlText);
             }
-
         })
 };
 loadProducts();
+
 const updateProdBtn = (prodId, cartType) => {
     const prodBtns = prods.querySelectorAll(cartType);
     const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
@@ -200,7 +202,7 @@ const addToCart = function (prodId, cartSection, cartList) {
                 const item = data.products.find((product) => product.id === prodId);
                 cartList.push(item);
 
-                htmlText = `<div class="cart_item row" data-id=${item.id}>
+                const htmlText = `<div class="cart_item row" data-id=${item.id}>
             <img class="cart_image" src=${item.image} alt="">
             <h4 class="cart_header">${item.title}</h4>
             <div>
@@ -270,10 +272,10 @@ const updateCartNumbers = (cartSection) => {
 
     if (cartSection.classList.contains('saved_section')) {
         savedHeader.innerText = savedItems.length;
-        totalPrice.innerText = savedItems.reduce((init,item) => init+=item.price,init=0)
+        totalPrice.innerText = savedItems.reduce((init,item) => init+=item.price,0)
     } else {
         cartHeader.innerText = cartItems.length;
-        totalPrice.innerText = cartItems.reduce((init,item) => init+=item.price,init=0)
+        totalPrice.innerText = cartItems.reduce((init,item) => init+=item.price,0)
     }
 }
 
@@ -284,3 +286,18 @@ for (let link of navbarLinks) {
 favBtn.addEventListener('click', switchBtns);
 cartBtn.addEventListener('click', switchBtns);
 
+// Filter products depends on clicked button
+const filterBtns = document.querySelector('.filters');
+const filterCategory = (ev) => {
+    if(ev.target.nodeName === 'BUTTON' && !ev.target.classList.contains('filter-selected')) {
+        if(ev.target.value === 'All') loadProducts();
+        else loadProducts(ev);
+        
+        const filteredItem = [...filterBtns.children].find((item) => {
+            return item.classList.contains('filter-selected');
+        })
+        filteredItem.classList.remove('filter-selected');
+        ev.target.classList.add('filter-selected');
+}}
+
+filterBtns.addEventListener('click', filterCategory);

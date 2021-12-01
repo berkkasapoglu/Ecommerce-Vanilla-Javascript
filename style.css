@@ -239,7 +239,7 @@ header {
     border-radius: 2em;
     border: 1px solid var(--clr-other-strong);
     transition: ease-in .2s;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-xxs);
 }
 
 .btn-primary {

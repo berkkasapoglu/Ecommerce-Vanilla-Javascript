@@ -1,6 +1,6 @@
-let prods = document.querySelector(".products"),
-    toggle = document.querySelector("#toggleBar"),
-    toggleBar = document.querySelector(".toggle_bar");
+import { setCookie, addCookiesToCart } from './cookie.js'
+
+let prods = document.querySelector(".products");
 
 
 let protection = document.querySelector(".protection"),
@@ -49,9 +49,8 @@ export const loadProducts = async function (ev = null) {
         }})
 };
 
-const updateProdBtn = (prodId, cartType) => {
+export const updateProdBtn = (prodId, cartType) => {
     const prodBtns = prods.querySelectorAll(cartType);
-    console.log(cartType);
     const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
     let btnFlag = parseInt(prodBtn.value);
     if (cartType === '#addCart') {
@@ -181,20 +180,18 @@ const savedItems = [];
 const cartItems = [];
 
 // Add item to cart
-const addToCart = async function (prodId, cartSection, cartList) {
+export const addToCart = async function (prodId, cartSection, cartList) {
     data.then((data) => {
     if (cartList.some((item) => item.id === prodId)) {
         console.log("It already exist");
     } else {
         const item = data.products.find((product) => product.id === prodId);
         cartList.push(item);
-
         if(cartList === cartItems) {
-            addToCookie(cartCookieName, cartSection);}
+            setCookie(cartCookieName, cartList);}
         else if(cartList === savedItems) {
-            addToCookie(savedCookieName, cartSection);}
+            setCookie(savedCookieName, cartList);}
 
-        document.cookie = `cartItems=${JSON.stringify(cartList)}`;
         const htmlText = `<div class="cart_item row" data-id=${item.id}>
     <img class="cart_image" src=${item.image} alt="">
     <h4 class="cart_header">${item.title}</h4>
@@ -220,68 +217,20 @@ const addToCart = async function (prodId, cartSection, cartList) {
 }
 
 // ----------------    Cookies   -----------------------
-// Create cookies
-
 const cartInfo = ['#addCart', prodSect, cartItems]
 const savedInfo = ['#addSaved', savedSect, savedItems]
-
-async function createCookies(name, cartType, cartSection, cartList) {
-    if(!document.cookie.includes(name)) {
-        document.cookie = `${name}=;`;
-    } else {
-    const cookies = document.cookie.split(';')
-    let cartCookies = cookies.find((el) => el.includes(`${name}`))
-    // if cookies is not empty add to cart
-    if(cartCookies.match(/=(?=\W+\w+)/g)) {
-        const cookieList = getCookie(name);
-        for(let item of cookieList) {
-            await addToCart(item.id, cartSection, cartList);
-            updateProdBtn(parseInt(item.id), cartType);
-        }
-    //     updateProdBtn(parseInt(item.id), `${cartType}`);
-    }
-    // let savedCookies = cookies.find((el) => el.includes('savedItems'))
-    
-    // cartCookies = JSON.parse(cartCookies.split('cartItems=').splice(1))
-    // for(let item of cartCookies) {
-    //     addToCart(item.id, cartSection, cartList);
-    //     updateProdBtn(parseInt(item.id), `${cartType}`);
-    // }
-    // for(let item of savedCookies) {
-    //     addToCart(item.id, savedSect, savedItems);
-    //     updateProdBtn(parseInt(item.id), '#addSaved');
-    // }
-}}
-function getCookie(cookieName) {
-    const cookies = document.cookie.split(';')
-    let cartCookies = cookies.find((el) => el.includes(`${cookieName}`))
-    try {
-        cartCookies = JSON.parse(cartCookies.split(`${cookieName}=`).splice(1))
-    } catch {
-        cartCookies = [];
-    }
-    return cartCookies;
-}
-
-function addToCookie(cookieName, cartList) {
-    const cookieList = getCookie(cookieName);
-    console.log(cookieList)
-    document.cookie = `${cookieName}=${JSON.stringify(cookieList)}`;
-}
-
-let cartCookieName = 'cartItems';
-let savedCookieName = 'savedItems';
+export let cartCookieName = 'cartItems';
+export let savedCookieName = 'savedItems';
 async function loadCookies() {
     await loadProducts();
-    await createCookies(cartCookieName, ...cartInfo);
-    await createCookies(savedCookieName, ...savedInfo);
+    addCookiesToCart(cartCookieName, ...cartInfo);
+    addCookiesToCart(savedCookieName, ...savedInfo);
 }
-
 loadCookies();
 
 // ---------------------------------------
 // Removes item from card
-const removeFromCart = function (prodId, cartSection, cartList) {
+export const removeFromCart = function (prodId, cartSection, cartList) {
     let delBtns;
     if (cartSection.classList.contains('product_section')) {
         delBtns = document.querySelectorAll('.product_section #deleteItem')
@@ -295,6 +244,11 @@ const removeFromCart = function (prodId, cartSection, cartList) {
     const removedItemId = cartList.find((element) => element.id === prodId);
     cartList.splice(cartList.indexOf(removedItemId), 1);
     updateCartNumbers(cartSection);
+    //Set cookie items after remove item from cart
+    if(cartList === cartItems) {
+        setCookie(cartCookieName, cartList);}
+    else if(cartList === savedItems) {
+        setCookie(savedCookieName, cartList);}
 }
 
 // Event Listener to delete button on cart

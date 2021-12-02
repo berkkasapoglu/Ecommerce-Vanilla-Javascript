@@ -1,4 +1,4 @@
-import { cartCookieName, savedCookieName} from './app.js'
+import { cartCookieName, savedCookieName } from './app.js'
 import { addToCart, updateProdBtn } from './app.js'
 
 // Create cookies
@@ -7,7 +7,7 @@ async function createCookies(name) {
         document.cookie = `${name}=;`;
     }}
 
-function getCookie(cookieName) {
+export function getCookie(cookieName) {
     const cookies = document.cookie.split(';')
     let cartCookies = cookies.find((el) => el.includes(`${cookieName}`))
     try {

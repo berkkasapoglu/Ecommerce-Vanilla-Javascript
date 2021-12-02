@@ -585,11 +585,6 @@ footer *{
     
 }
 
-@media (max-width: 60rem) {
-    .product {
-        flex-basis: 45%;
-    }
-}
 @media (max-width: 50rem) {
     
     :root {
@@ -598,16 +593,16 @@ footer *{
         --font-size-xs: .9rem;
     }
 
+    .product {
+        flex-basis: 45%;
+    }
+
     .header_content {
         margin-bottom: 2rem;
     }
 
     .header_full {
         padding-bottom: 3rem;
-    }
-
-    .product {
-        flex-basis: 50%;
     }
 
     .slider .row {
@@ -667,6 +662,9 @@ footer *{
         background-color: transparent;
     }
 
+    .product_image {
+        height: 7rem;
+    }
     /* Navbar classes */
     .navbar_link {
         color: #fff;

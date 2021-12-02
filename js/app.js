@@ -1,55 +1,40 @@
-import { setCookie, addCookiesToCart } from './cookie.js'
+import { setCookie, addCookiesToCart, getCookie } from './cookie.js'
+import { createProductElement, createCartElement } from './product.js'
 
 let prods = document.querySelector(".products");
-
 
 let protection = document.querySelector(".protection"),
     cartBtn = document.querySelector("#cartBtn"),
     favBtn = document.querySelector("#favBtn");
-const btns = [cartBtn, favBtn];
+
+const btns = [cartBtn, favBtn]
 
 let cart = document.querySelector(".cart");
 let navbarLinks = document.querySelectorAll(".navbar_link");
 
-
 let cartProd = document.querySelectorAll(".cart_body");
 let prodSect = document.querySelector(".product_section");
 let savedSect = document.querySelector(".saved_section");
+
 const fetchProductData = async function () {
     const response = await fetch("./data/products.json")
     const data = await response.json();
     return data;
 }
-const data = fetchProductData();
-// ---------------------------------------
-export const loadProducts = async function (ev = null) {
-    return data.then((data) => {
-    prods.innerHTML = '';
-        for (let prod of data.products) {
-            if (ev && ev.target.value !== prod.category) continue;
-            let htmlText = `<div class="product" data-id=${prod.id}>
-                        <img src=${prod.image} alt="" class="product_image">
-                        <h4 class="product_header">${prod.title}</h4>
-                        <div>
-                            <i class="fa fa-star checked"></i>
-                            <i class="fa fa-star checked"></i>
-                            <i class="fa fa-star checked"></i>
-                            <i class="fa fa-star checked"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        
-                        <p class="product_price">$${prod.price}</p>
-                        
-                        <div class="row align-center" id="addCartBtns">
-                            <button class="btn btn-primary" id="addCart" value=0>Add to Cart</button>
-                            <i class="far fa-heart" id="addSaved" value=0></i>
-                        </div>
-                    </div>`;
-            prods.insertAdjacentHTML('beforeend', htmlText);
-        }})
-};
+export const data = fetchProductData();
 
-export const updateProdBtn = (prodId, cartType) => {
+// ---------------------------------------
+//Load products into the product section.
+export const loadProducts = async function (products) {
+    while (prods.firstChild && prods.removeChild(prods.firstChild));
+    for (let prod of products) {
+        const prodElement = createProductElement(prod);
+        prods.appendChild(prodElement);
+    }
+};
+// ---------------------------------------
+
+export const updateProdBtn = async (prodId, cartType) => {
     const prodBtns = prods.querySelectorAll(cartType);
     const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
     let btnFlag = parseInt(prodBtn.value);
@@ -76,11 +61,9 @@ export const updateProdBtn = (prodId, cartType) => {
     }
 }
 
-
 // ---------------------------------------
 let cartType;
 prods.addEventListener('click', function (ev) {
-
     const prodItems = prods.querySelectorAll(".product")
     const prodItem = [...prodItems].find((element) => {
         return element === ev.target.closest('[data-id]')
@@ -182,54 +165,45 @@ const cartItems = [];
 // Add item to cart
 export const addToCart = async function (prodId, cartSection, cartList) {
     data.then((data) => {
-    if (cartList.some((item) => item.id === prodId)) {
-        console.log("It already exist");
-    } else {
-        const item = data.products.find((product) => product.id === prodId);
-        cartList.push(item);
-        if(cartList === cartItems) {
-            setCookie(cartCookieName, cartList);}
-        else if(cartList === savedItems) {
-            setCookie(savedCookieName, cartList);}
-
-        const htmlText = `<div class="cart_item row" data-id=${item.id}>
-    <img class="cart_image" src=${item.image} alt="">
-    <h4 class="cart_header">${item.title}</h4>
-    <div>
-        <i class="fa fa-star checked"></i>
-        <i class="fa fa-star checked"></i>
-        <i class="fa fa-star checked"></i>
-        <i class="fa fa-star checked"></i>
-        <i class="far fa-star"></i>
-    </div>
-    <p class="cart_price"><span>${item.price}</span>$</p>
-    <button class="delete_btn" id="deleteItem">Delete</button>
-    </div>`
-
-        if (cartSection.querySelector('.empty_wishlist')) {
-            cartSection.innerHTML = "";
-            cartSection.innerHTML += htmlText;
+        if (cartList.some((item) => item.id === prodId)) {
+            console.log("It already exist");
         } else {
-            cartSection.innerHTML += htmlText;
-        }
-        updateCartNumbers(cartSection);
-    }})
-}
+            const item = data.products.find((product) => product.id === prodId);
+            cartList.push(item);
+            if (cartList === cartItems) {
+                setCookie(cartCookieName, cartList);
+            }
+            else if (cartList === savedItems) {
+                setCookie(savedCookieName, cartList);
+            }
 
+            const cartElement = createCartElement(item)
+            const emptyCart = cartSection.querySelector('.empty_wishlist');
+            console.log(cartSection.children)
+            if (emptyCart) {
+                cartSection.children[0].removeChild(emptyCart);
+                cartSection.appendChild(cartElement);
+            } else {
+                cartSection.appendChild(cartElement);
+            }
+            updateCartNumbers(cartSection);
+        }
+    })
+}
 // ----------------    Cookies   -----------------------
 const cartInfo = ['#addCart', prodSect, cartItems]
 const savedInfo = ['#addSaved', savedSect, savedItems]
 export let cartCookieName = 'cartItems';
 export let savedCookieName = 'savedItems';
 async function loadCookies() {
-    await loadProducts();
+    await data.then((data) => loadProducts(data.products));
     addCookiesToCart(cartCookieName, ...cartInfo);
     addCookiesToCart(savedCookieName, ...savedInfo);
 }
 loadCookies();
 
 // ---------------------------------------
-// Removes item from card
+// Removes item from cart
 export const removeFromCart = function (prodId, cartSection, cartList) {
     let delBtns;
     if (cartSection.classList.contains('product_section')) {
@@ -245,10 +219,12 @@ export const removeFromCart = function (prodId, cartSection, cartList) {
     cartList.splice(cartList.indexOf(removedItemId), 1);
     updateCartNumbers(cartSection);
     //Set cookie items after remove item from cart
-    if(cartList === cartItems) {
-        setCookie(cartCookieName, cartList);}
-    else if(cartList === savedItems) {
-        setCookie(savedCookieName, cartList);}
+    if (cartList === cartItems) {
+        setCookie(cartCookieName, cartList);
+    }
+    else if (cartList === savedItems) {
+        setCookie(savedCookieName, cartList);
+    }
 }
 
 // Event Listener to delete button on cart
@@ -269,7 +245,7 @@ for (let section of cartProd) {
         }
     })
 }
-
+"javascript:alert('test');\" xxx=\"maliciousCode3000\""
 // Update items size in cart header and total price
 const updateCartNumbers = (cartSection) => {
     const savedHeader = favBtn.querySelector("#savedItemSize");
@@ -292,17 +268,48 @@ for (let link of navbarLinks) {
 favBtn.addEventListener('click', switchBtns);
 cartBtn.addEventListener('click', switchBtns);
 
+const cartTypes = ['#addCart', '#addSaved']
+// -----------------  Filter Buttons ----------------------
+const filterData = (data, category) => {
+    return data.filter((item) => item.category === category)
+}
+
 // Filter products depends on clicked button
 const filterBtns = document.querySelector('.filters');
-const filterCategory = (ev) => {
+const filterCategory = async (ev) => {
     if (ev.target.nodeName === 'BUTTON' && !ev.target.classList.contains('filter-selected')) {
-        if (ev.target.value === 'All') loadProducts();
-        else loadProducts(ev);
+        const cartCookie = getCookie(cartCookieName)
+        const savedCookie = getCookie(savedCookieName)
+        if (ev.target.value === 'All') {
+            await data.then((data) => loadProducts(data.products));
+            let type = 0;
+            for (let cookies of [cartCookie, savedCookie]) {
+                for (let cookie of cookies) {
+                    updateProdBtn(cookie.id, cartTypes[type])
+                }
+                type += 1;
+            }
+        }
+        else {
+            await data.then((data) => {
+                const filteredData = filterData(data.products, ev.target.value)
+                loadProducts(filteredData);
+                const filteredCartCookies = filterData(cartCookie, ev.target.value);
+                const filteredSavedCookies = filterData(savedCookie, ev.target.value);
+                let type = 0;
+                for (let cookies of [filteredCartCookies, filteredSavedCookies]) {
+                    for (let cookie of cookies) {
+                        updateProdBtn(cookie.id, cartTypes[type])
+                    }
+                    type += 1;
+                }
+            })
+        }
 
-        const filteredItem = [...filterBtns.children].find((item) => {
+        const filterBtn = [...filterBtns.children].find((item) => {
             return item.classList.contains('filter-selected');
         })
-        filteredItem.classList.remove('filter-selected');
+        filterBtn.classList.remove('filter-selected');
         ev.target.classList.add('filter-selected');
     }
 }

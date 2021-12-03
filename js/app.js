@@ -1,8 +1,7 @@
-import { setCookie, addCookiesToCart, getCookie } from './cookie.js'
+import { setCookie, getCookie } from './cookie.js'
 import { createProductElement, createCartElement } from './product.js'
 
 let prods = document.querySelector(".products");
-
 let protection = document.querySelector(".protection"),
     cartBtn = document.querySelector("#cartBtn"),
     favBtn = document.querySelector("#favBtn");
@@ -16,14 +15,20 @@ let cartProd = document.querySelectorAll(".cart_body");
 let prodSect = document.querySelector(".product_section");
 let savedSect = document.querySelector(".saved_section");
 
-const fetchProductData = async function () {
-    const response = await fetch("./data/products.json")
-    const data = await response.json();
-    return data;
-}
-export const data = fetchProductData();
+// ----------------- Get and Display Data ----------------------
 
-// ---------------------------------------
+//Get all products
+const fetchProductData = async function () {
+    try {
+        const response = await fetch("./data/products.json")
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const data = fetchProductData();
 //Load products into the product section.
 export const loadProducts = async function (products) {
     while (prods.firstChild && prods.removeChild(prods.firstChild));
@@ -32,70 +37,75 @@ export const loadProducts = async function (products) {
         prods.appendChild(prodElement);
     }
 };
-// ---------------------------------------
 
-export const updateProdBtn = async (prodId, cartType) => {
-    const prodBtns = prods.querySelectorAll(cartType);
-    const prodBtn = [...prodBtns].find((el) => parseInt(el.closest('[data-id]').dataset.id) === prodId)
+// ----------------  Update style of buttons on products -----------------------
+
+// Update button style(Product Add Cart buttom) 
+export const updateProdBtn = (prodId) => {
+    const prod = [...prods.children].find((el) => parseInt(el.dataset.id) === prodId)
+    const prodBtn = prod.querySelector('#addCart')
     let btnFlag = parseInt(prodBtn.value);
-    if (cartType === '#addCart') {
-        prodBtn.classList.toggle("btn-primary");
-        prodBtn.classList.toggle("is-added");
-        if (!btnFlag) {
-            prodBtn.innerText = "Added";
-            prodBtn.value = 1;
-        } else {
-            prodBtn.innerText = "Add To Cart";
-            prodBtn.value = 0;
-        }
-    } else if (cartType === '#addSaved') {
-        if (!btnFlag) {
-            prodBtn.value = 1;
-            prodBtn.classList.remove('far');
-            prodBtn.classList.add('fas');
-        } else {
-            prodBtn.value = 0;
-            prodBtn.classList.remove('fas');
-            prodBtn.classList.add('far');
-        }
+    if (!btnFlag) {
+        prodBtn.innerText = "Added";
+        prodBtn.classList.remove("btn-primary");
+        prodBtn.classList.add("is-added");
+        prodBtn.value = 1;
+    } else {
+        prodBtn.innerText = "Add To Cart";
+        prodBtn.classList.add("btn-primary");
+        prodBtn.classList.remove("is-added");
+        prodBtn.value = 0;
     }
 }
 
-// ---------------------------------------
-let cartType;
+// Update button style(Product Add Favourite section buttom) 
+export const updateSaveBtn = (prodId) => {
+    const prod = [...prods.children].find((el) => parseInt(el.dataset.id) === prodId)
+    const saveBtn = prod.querySelector('#addSaved')
+    let btnFlag = parseInt(saveBtn.value);
+    if (!btnFlag) {
+        saveBtn.value = 1;
+        saveBtn.classList.remove('far');
+        saveBtn.classList.add('fas');
+    } else {
+        saveBtn.value = 0;
+        saveBtn.classList.remove('fas');
+        saveBtn.classList.add('far');
+    }
+}
+
+// ---------------- Production event listeners -----------------------
+//Add event listeners to production buttons
 prods.addEventListener('click', function (ev) {
-    const prodItems = prods.querySelectorAll(".product")
-    const prodItem = [...prodItems].find((element) => {
+    const prodItem = [...prods.children].find((element) => {
         return element === ev.target.closest('[data-id]')
     })
     const prodId = parseInt(prodItem.dataset.id);
     const prodBtn = prodItem.querySelector('#addCart');
     const addFavBtn = prodItem.querySelector('#addSaved');
     if (ev.target.nodeName === "BUTTON") {
-        cartType = '#addCart';
         if (!parseInt(prodBtn.value)) {
             addToCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId, cartType);
+            updateProdBtn(prodId)
         }
         else {
             removeFromCart(prodId, prodSect, cartItems);
-            updateProdBtn(prodId, cartType);
+            updateProdBtn(prodId)
         }
     } else if (ev.target.nodeName === "I") {
-        cartType = '#addSaved';
         if (!parseInt(addFavBtn.value)) {
             addToCart(prodId, savedSect, savedItems);
-            updateProdBtn(prodId, cartType);
+            updateSaveBtn(prodId)
         }
         else {
             removeFromCart(prodId, savedSect, savedItems);
-            updateProdBtn(prodId, cartType);
+            updateSaveBtn(prodId)
         }
     }
 })
 
 // ---------------------------------------
-
+// If click change Cart and Favourites toggle buttons style on cart menu
 const switchBtns = function () {
     if (!this.classList.contains('is-active')) {
         this.classList.add('is-active');
@@ -114,10 +124,9 @@ const switchBtns = function () {
     }
 }
 
+// ------------------ Open and Close Cart ---------------------
 
-// ---------------------------------------
-
-// Opens Cart
+// Opens Cart Menu
 const openCart = function (ev) {
     ev.preventDefault();
     cart.classList.add("openCart");
@@ -138,11 +147,10 @@ const openCart = function (ev) {
         savedSect.classList.remove("is-visible");
         updateCartNumbers(prodSect);
     }
-
 }
-// ---------------------------------------
-// Close cart page if click outside of the cart window.
-document.addEventListener('click', function (ev) {
+
+// Close cart menu if click outside of the cart window
+const closeCart = (ev) => {
     const clickCart = (ev.path.some((item) => {
         try {
             return item.classList.contains("cart");
@@ -157,12 +165,21 @@ document.addEventListener('click', function (ev) {
             protection.style.opacity = 0;
             protection.style.pointerEvents = "none";
         }
-})
-// ---------------------------------------
-const savedItems = [];
-const cartItems = [];
+}
+document.addEventListener('click', closeCart)
 
-// Add item to cart
+// ------------------ Cart Actions  ---------------------
+// 1.Add item to cart
+// 2.Remove item from cart
+// 3.Get item from cartlist(Function)
+// 4.Adding html element to cart
+// 5.Delete button on cart menu
+// 6.Cart menu price functionalities (Updating prices depends on quantity and item price)
+
+let savedItems = [];
+let cartItems = [];
+
+// Add item to cart and cookie array
 export const addToCart = async function (prodId, cartSection, cartList) {
     data.then((data) => {
         if (cartList.some((item) => item.id === prodId)) {
@@ -171,38 +188,19 @@ export const addToCart = async function (prodId, cartSection, cartList) {
             const item = data.products.find((product) => product.id === prodId);
             cartList.push(item);
             if (cartList === cartItems) {
+                item['quantity'] = 1;
                 setCookie(cartCookieName, cartList);
             }
             else if (cartList === savedItems) {
                 setCookie(savedCookieName, cartList);
             }
-
-            const cartElement = createCartElement(item)
-            const emptyCart = cartSection.querySelector('.empty_wishlist');
-            console.log(cartSection.children)
-            if (emptyCart) {
-                cartSection.children[0].removeChild(emptyCart);
-                cartSection.appendChild(cartElement);
-            } else {
-                cartSection.appendChild(cartElement);
-            }
+            loadCart(item, cartSection, cartList);
             updateCartNumbers(cartSection);
         }
+        
     })
 }
-// ----------------    Cookies   -----------------------
-const cartInfo = ['#addCart', prodSect, cartItems]
-const savedInfo = ['#addSaved', savedSect, savedItems]
-export let cartCookieName = 'cartItems';
-export let savedCookieName = 'savedItems';
-async function loadCookies() {
-    await data.then((data) => loadProducts(data.products));
-    addCookiesToCart(cartCookieName, ...cartInfo);
-    addCookiesToCart(savedCookieName, ...savedInfo);
-}
-loadCookies();
 
-// ---------------------------------------
 // Removes item from cart
 export const removeFromCart = function (prodId, cartSection, cartList) {
     let delBtns;
@@ -218,7 +216,7 @@ export const removeFromCart = function (prodId, cartSection, cartList) {
     const removedItemId = cartList.find((element) => element.id === prodId);
     cartList.splice(cartList.indexOf(removedItemId), 1);
     updateCartNumbers(cartSection);
-    //Set cookie items after remove item from cart
+    //Update cookie items after remove item from cart
     if (cartList === cartItems) {
         setCookie(cartCookieName, cartList);
     }
@@ -227,27 +225,66 @@ export const removeFromCart = function (prodId, cartSection, cartList) {
     }
 }
 
-// Event Listener to delete button on cart
+// Get item from cart
+const getItem = (prodId, cartList) => {
+    return cartList.find((item) => item.id === prodId);
+}
+
+// Load item to cart menu
+export let cartCookieName = 'cartItems';
+export let savedCookieName = 'savedItems';
+async function loadCart(item, cartSection, cartList) {
+    if(cartList.length) {
+        const cartElement = createCartElement(item, cartSection)
+        const emptyCart = cartSection.querySelector('.empty_wishlist');
+        if (emptyCart) {
+            cartSection.children[0].removeChild(emptyCart);
+            cartSection.appendChild(cartElement);
+        } else {
+            cartSection.appendChild(cartElement);
+        }
+    }
+}
+
+// Event Listener to buttons on cart menu (Delete button and input)
 for (let section of cartProd) {
     section.addEventListener('click', (ev) => {
         if (ev.target.nodeName === "BUTTON") {
             if (ev.target.closest('.product_section')) {
                 const prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
                 removeFromCart(prodId, prodSect, cartItems);
-                cartType = '#addCart';
-                updateProdBtn(prodId, cartType);
+                updateProdBtn(prodId);
             } else if (ev.target.closest('.saved_section')) {
-                cartType = '#addSaved';
                 const prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
                 removeFromCart(prodId, savedSect, savedItems);
-                updateProdBtn(prodId, cartType);
+                updateSaveBtn(prodId);
             }
         }
     })
 }
-"javascript:alert('test');\" xxx=\"maliciousCode3000\""
+
+// Update quantity of items in cart menu
+const prodCount = document.querySelector('.product_section');
+
+const updateCartPrice = (ev) => {
+    const prodId = parseInt(ev.target.closest('[data-id]').dataset.id)
+    let prodPrice = getItem(prodId, cartItems).price;
+    let itemQuantity = ev.target.value;
+    let resultsPrice = (prodPrice / (itemQuantity - 1)) * (itemQuantity);
+    ev.target.previousSibling.children[0].textContent = resultsPrice
+
+    getItem(prodId, cartItems).price = resultsPrice;
+    getItem(prodId, cartItems).quantity = parseInt(ev.target.value);
+}
+
+prodCount.addEventListener('change', (ev) => {
+    updateCartPrice(ev)
+    updateCartNumbers(prodSect)
+    setCookie(cartCookieName, cartItems)
+});
+
 // Update items size in cart header and total price
-const updateCartNumbers = (cartSection) => {
+const updateCartNumbers = async (cartSection) => {
     const savedHeader = favBtn.querySelector("#savedItemSize");
     const cartHeader = cartBtn.querySelector("#cartItemSize");
     const totalPrice = document.querySelector('#totalPrice');
@@ -261,6 +298,17 @@ const updateCartNumbers = (cartSection) => {
     }
 }
 
+// When page first open get item quantity in cart list 
+// and update previous cart item quantities.
+const updateCartQuantities = (prodId) => {
+    const cartProds = document.querySelectorAll('.product_section .cart_item');
+    cartProds.forEach(item => {
+        const itemQuantity = item.querySelector('.product-count');
+        if(parseInt(item.dataset.id) === prodId) {
+            itemQuantity.value = getItem(prodId, cartItems).quantity
+        }
+    })
+}
 
 for (let link of navbarLinks) {
     link.addEventListener('click', openCart);
@@ -269,7 +317,9 @@ favBtn.addEventListener('click', switchBtns);
 cartBtn.addEventListener('click', switchBtns);
 
 const cartTypes = ['#addCart', '#addSaved']
+
 // -----------------  Filter Buttons ----------------------
+
 const filterData = (data, category) => {
     return data.filter((item) => item.category === category)
 }
@@ -299,7 +349,7 @@ const filterCategory = async (ev) => {
                 let type = 0;
                 for (let cookies of [filteredCartCookies, filteredSavedCookies]) {
                     for (let cookie of cookies) {
-                        updateProdBtn(cookie.id, cartTypes[type])
+                        updateProdBtn(cookie.id)
                     }
                     type += 1;
                 }
@@ -315,3 +365,20 @@ const filterCategory = async (ev) => {
 }
 
 filterBtns.addEventListener('click', filterCategory);
+
+// ----------------- Load All Elements from cookies  ----------------------
+// Load cart items from cookies after page loads
+window.addEventListener('DOMContentLoaded', async () => {
+    await data.then((data) => loadProducts(data.products));
+    cartItems = getCookie(cartCookieName);
+    savedItems = getCookie(savedCookieName);
+
+    cartItems.forEach(item => {
+        loadCart(item, prodSect, cartItems)
+        updateProdBtn(item.id)
+        updateCartQuantities(item.id)});
+    savedItems.forEach(item => {
+        loadCart(item, savedSect, savedItems)
+        updateSaveBtn(item.id)});
+
+})

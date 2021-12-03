@@ -55,7 +55,7 @@ export const createProductElement = (prod) => {
     return container
 }
 
-export const createCartElement = (prod) => {
+export const createCartElement = (prod, cartSection) => {
     const container = document.createElement('div');
     container.classList.add('cart_item', 'row');
     container.setAttribute('data-id', prod.id);
@@ -77,19 +77,32 @@ export const createCartElement = (prod) => {
     const star = document.createElement('i')
     star.classList.add('far', 'fa-star');
 
-    const price = document.createElement('p')
-    price.className = "cart_price";
-    price.textContent = `$${prod.price}`
-    
+    const priceCurrency = document.createElement('p')
+    priceCurrency.className = "cart_price";
+    priceCurrency.textContent = `$`
+    const priceValue = document.createElement('span')
+    priceValue.textContent = `${prod.price}`
+    priceValue.setAttribute('id', 'priceValue')
+    priceCurrency.appendChild(priceValue)
+
     const btn = document.createElement('button')
     btn.textContent = 'Delete'
     btn.classList.add('delete_btn')
     btn.id = 'deleteItem';
-    
+
     container.appendChild(img)
     container.appendChild(hTag)
     container.appendChild(stars)
-    container.appendChild(price)
+    container.appendChild(priceCurrency)
+    const input = document.createElement('input')
+    if(cartSection.classList.contains('product_section')) {
+        input.setAttribute('type', 'number')
+        input.setAttribute('min', 1)
+        input.setAttribute('value', 1)
+        input.classList.add('product-count')
+        container.appendChild(input)
+    }
+
     container.appendChild(btn)
 
     return container

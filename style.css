@@ -103,6 +103,7 @@ button {
     background: #000;
     opacity: 0;
     pointer-events: none;
+    transition: opacity .6s;
 }
 
 .no-scroll {
@@ -390,6 +391,9 @@ footer *{
     overflow-y: auto; 
 }
 
+.product-count {
+    width: 2rem;
+}
 /* Cart sections */
 .product_section {
     display: none;
@@ -563,20 +567,6 @@ footer *{
 .filter-selected {
     background-color: var(--clr-other-strong);
 }
-
-/* --------------- Loading Product Symbol ----------------- */
-/* .load-product {
-    font-size: 3rem;
-    text-align: center;
-    background: radial-gradient(circle at center, #c2c7ca, rgba(28, 96, 122, 0) 60%);
-    cursor: pointer;
-    transition: background 2s;
-    user-select: none;
-}
-
-.load-product:hover {
-    background: radial-gradient(circle at center, #a4a8aa, rgba(28, 96, 122, 0) 60%);
-} */
 
 @media (min-width: 66rem) {
     .product {

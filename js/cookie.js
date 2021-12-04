@@ -1,4 +1,4 @@
-import { cartCookieName, savedCookieName } from './app.js'
+import { cartCookieName, savedCookieName } from './cart.js'
 
 // Create cookies
 async function createCookies(name) {

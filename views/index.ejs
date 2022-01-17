@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar row">
+            <a href=""><img src="images/logo.png" alt="logo" class="logo"></a>
+            <form action="" class="search-form">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search Product.." class="search-input">
+                    <button class="fas fa-search"></button>
+                </div>
+            </form>
+            <div class="right row">
+                <a href="#" class="navbar-link" id="wishLink">Favourites</a>
+                <a href="#" class="navbar-link" id="cartLink">Cart</a>
+            </div>
+        </nav>
+        <div class="slider header-full">
+            <div class="row header-section section-space slide">
+                <div class="header-content">
+                    <h2 class="header-tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader-tag">Check out for latest prices.</h4>
+                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                </div>
+                <img src=<%= "images/banner_01.png" %> alt="" class="header-img">
+            </div>
+            <div class="row header-section section-space slide">
+                <div class="header-content">
+                    <h2 class="header-tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader-tag">Check out for latest prices.</h4>
+                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                </div>
+                <img src="./images/banner_02.png" alt="" class="header-img">
+            </div>
+            <div class="row header-section section-space slide">
+                <div class="header-content">
+                    <h2 class="header-tag text-white">PHONES FOR YOU</h2>
+                    <h4 class="subheader-tag">Check out for latest prices.</h4>
+                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                </div>
+                <img src="images/collection_01.png" alt="" class="header-img">
+            </div>
+        </div>
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+    </header>
+    <section class="section-space" id="prods">
+        <div class="filters">
+            <button class="filter-btn filter-selected" value="All">All</button>
+            <button class="filter-btn" value="Featured Products">Featured Products</button>
+            <button class="filter-btn" value="Special Products">Special Products</button>
+            <button class="filter-btn" value="Trending Products">Trending Products</button>
+        </div>
+    </section>
+
+    <section class="row products">
+        <% for(let product of products) { %>
+            <div class="product scale"  data-id="<%= product.id %>">
+                <img src="<%= product.image %>" alt="" class="product-image">
+                <h4 class="product-header"><%= product.title %></h4>
+                <i class="fa fa-star checked"></i>
+                <i class="fa fa-star checked"></i>
+                <i class="fa fa-star checked"></i>
+                <i class="fa fa-star checked"></i>
+                <i class="far fa-star "></i>
+                <p class="product-price"><%= product.price %>$</p>
+                <div class="row align-center">
+                    <button class="btn btn-primary" id="addToCart">Add to Cart</button>
+                    <i class="far fa-heart" id="addWish" data-status="0"></i>
+                </div>
+            </div>
+        <% } %> 
+    </section>
+    <footer>
+        <div class="container section-space text-center">
+            <h3>Contact Us</h3>
+            <p><i class="fas fa-map-marker-alt"></i>
+                42 Dream House, Dreammy street, 7131 Dreamville, USA</p>
+            <p><i class="fas fa-envelope-open-text"></i>
+                company@gmail.com</p>
+            <p><i class="fas fa-phone"></i>
+                111-111-111</p>
+            <p><i class="fas fa-plane-departure"></i>
+                Ocean City,USA</p>
+        </div>
+    </footer>
+    <div class="protection"></div>
+    <div class="cart">
+        <div class="row">
+            <div class="cart-fav is-active " id="cartBtn"><i class="fas fa-cart-plus"></i>
+                CART (<span id="cartQuantity">0</span>)</a></div>
+            <div class="cart-fav" id="wishBtn"><i class="far fa-heart"></i>
+                FAVORITES (<span id="wishQuantity">0</span>)</a></div>
+        </div>
+        <div class="cart-headers text-center">
+            <h3>Product</h3>
+            <h3>Review</h3>
+            <h3>Price</h3>
+        </div>
+        <div class="cart-body cart-section is-visible">
+            <div class="empty-wishlist text-center">
+                <img class="empty-logo"
+                    src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
+                    alt="">
+                <h3 class="header-tag">EMPTY CART</h3>
+            </div>
+        </div>
+        <div class="cart-body wish-section">
+            <div class="empty-wishlist text-center">
+                <img class="empty-logo"
+                    src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
+                    alt="">
+                <h3 class="header-tag">EMPTY CART</h3>
+            </div>
+        </div>
+        <div class="cart-bottom">
+            <div class="row">
+                <h3 class="header-tag">TOTAL</h3>
+                <h4 class="price"><span id="totalPrice">0</span>$</h4>
+            </div>
+            <button class="btn-secondary"><span class="btn-text">CONTINUE</span></button>
+        </div>
+    </div>
+
+    <script src="js/index.js"  type="module"></script>
+    <script src="js/product.js"  type="module"></script>
+
+</body>
+
+</html>

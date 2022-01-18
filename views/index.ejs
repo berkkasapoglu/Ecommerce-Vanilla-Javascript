@@ -35,7 +35,7 @@
                     <h4 class="subheader-tag">Check out for latest prices.</h4>
                     <a class="btn btn-primary" href="#prods">SHOP NOW</a>
                 </div>
-                <img src=<%= "images/banner_01.png" %> alt="" class="header-img">
+                <img src=<%="images/banner_01.png" %> alt="" class="header-img">
             </div>
             <div class="row header-section section-space slide">
                 <div class="header-content">
@@ -68,21 +68,25 @@
 
     <section class="row products">
         <% for(let product of products) { %>
-            <div class="product scale"  data-id="<%= product.id %>">
+            <div class="product scale" data-id="<%= product.id %>">
                 <img src="<%= product.image %>" alt="" class="product-image">
-                <h4 class="product-header"><%= product.title %></h4>
+                <h4 class="product-header">
+                    <%= product.title %>
+                </h4>
                 <i class="fa fa-star checked"></i>
                 <i class="fa fa-star checked"></i>
                 <i class="fa fa-star checked"></i>
                 <i class="fa fa-star checked"></i>
                 <i class="far fa-star "></i>
-                <p class="product-price"><%= product.price %>$</p>
-                <div class="row align-center">
+                <p class="product-price">
+                    <%= product.price %>$
+                </p>
+                <div class="row align-center" id="prodQuantity">
                     <button class="btn btn-primary" id="addToCart">Add to Cart</button>
                     <i class="far fa-heart" id="addWish" data-status="0"></i>
                 </div>
             </div>
-        <% } %> 
+            <% } %>
     </section>
     <footer>
         <div class="container section-space text-center">
@@ -119,12 +123,12 @@
             </div>
         </div>
         <div class="cart-body wish-section">
-            <div class="empty-wishlist text-center">
-                <img class="empty-logo"
-                    src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
-                    alt="">
-                <h3 class="header-tag">EMPTY CART</h3>
-            </div>
+                <div class="empty-wishlist text-center">
+                    <img class="empty-logo"
+                        src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
+                        alt="">
+                    <h3 class="header-tag">EMPTY CART</h3>
+                </div>
         </div>
         <div class="cart-bottom">
             <div class="row">
@@ -135,9 +139,9 @@
         </div>
     </div>
 
-    <script src="js/index.js"  type="module"></script>
-    <script src="js/product.js"  type="module"></script>
-
+    <script src="js/index.js" type="module"></script>
+    <script src="js/product.js" type="module"></script>
+    
 </body>
 
 </html>

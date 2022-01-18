@@ -1,5 +1,6 @@
 import Cart from './cart.js'
 import { createCartElement, createInputElement, createButtonElement } from './product.js'
+import { sliderTimeout } from './slider.js'
 
 const products = document.querySelector('.products');
 const cartWindow = document.querySelector('.cart');
@@ -11,8 +12,8 @@ const switchCartBtn = document.querySelector('#cartBtn');
 const switchWishBtn = document.querySelector('#wishBtn');
 
 const protection = document.querySelector('.protection');
-const wishBody = document.querySelector('.wish-section');
-const cartBody = document.querySelector('.cart-section');
+const wishBodyEl = document.querySelector('.wish-section');
+const cartBodyEl = document.querySelector('.cart-section');
 
 const cart = new Cart();
 const wish = new Cart();
@@ -54,7 +55,9 @@ protection.addEventListener('click', closeCart)
 
 // Add DOM element to cart body.
 const loadProds = (cart, cartBodyEl) => {
-    cartBodyEl.textContent = '';
+    cartBodyEl.innerHTML = cart.items.length ? 
+        '' :
+        emptyCartEl.outerHTML
     cart.items.forEach((product) => {
         const cartElement = createCartElement(product, cartBodyEl);
         try {
@@ -66,10 +69,67 @@ const loadProds = (cart, cartBodyEl) => {
     })
 }
 
+// Event listener to buttons on product section
+const addCartEl = (item, ev) => {
+    //Add item to Cart after click add to cart button
+    if (ev.target.matches('#addToCart')) {
+        const quantityEl = createInputElement();
+        cart.addToCart(item);
+        ev.target.parentElement.prepend(quantityEl);
+        ev.target.remove();
+}}
+const addWishEl = (item, ev) => {
+    // Add item to wish list after click heart icon.
+    if (ev.target.matches('.fa-heart')) {
+        let status = ev.target.dataset.status
+        status == 0 ?
+        wish.addToCart(item) :
+        wish.removeFromCart(item);
+        updateWishButton(item.id);
+    }
+}
+//Event listener to all products section
+products.addEventListener('click', (ev) => {
+    try {
+        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+    } catch {
+        return
+    }
+    getItem(prodId).then((item) => {
+        //Event listener to inputs which is visible after the product was added to the cart.
+        addCartEl(item, ev);
+        addWishEl(item, ev);
+        if(ev.target.matches('.product-quantity-btn')) {
+            updateQuantityByInput(prodId,ev);
+        }
+    })
+})
+
+// Event listener to navbar links - opens cart or wish window and load product elements
+const navLinks = document.querySelectorAll('.navbar-link');
+navLinks.forEach((cartLink) => {
+    cartLink.addEventListener('click', openCart)
+})
+
+cartLink.addEventListener('click', () => {
+    loadProds(cart, cartBodyEl);
+    loadProds(wish, wishBodyEl);
+    showCartBody(switchCartBtn);
+});
+wishLink.addEventListener('click', () => {
+    loadProds(wish, cartBodyEl);
+    loadProds(cart, wishBodyEl);
+    showCartBody(switchWishBtn);
+});
+
+// Event listener to switch buttons on the top of cart window
+switchCartBtn.addEventListener('click', () => showCartBody(switchCartBtn))
+switchWishBtn.addEventListener('click', () => showCartBody(switchWishBtn))
+
 const cartQuantity = document.querySelector('#cartQuantity');
 const wishQuantity = document.querySelector('#wishQuantity');
 
-// Updates product quantity added to the cart
+// Updates cart header item quantities
 const updateCartHeader = () => {
     cartQuantity.textContent = cart.itemsInCart;
     wishQuantity.textContent = wish.itemsInCart;
@@ -78,14 +138,14 @@ const updateCartHeader = () => {
 // Update product 'Add to Cart and Add wish' buttons when delete or decrease quantity of item
 const updateProdButton = (id) => {
     const prod = document.querySelector(`[data-id="${id}"]`);
-    const prodtQuantityEl = prod.querySelector('.product-quantity');
-    const prodQuantityInput = prodtQuantityEl.querySelector('.product-quantity-inp')
+    const prodQuantityEl = prod.querySelector('.product-quantity');
+    const prodQuantityInput = prodQuantityEl.querySelector('.product-quantity-inp')
     const button = createButtonElement();
     if(cart.isExist(id)) {
         prodQuantityInput.value = cart.getItem(id).quantity;
     } else {
-        prodtQuantityEl.parentElement.prepend(button);
-        prodtQuantityEl.remove();
+        prodQuantityEl.parentElement.prepend(button);
+        prodQuantityEl.remove();
     }
 }
 
@@ -98,57 +158,23 @@ const updateWishButton = (id) => {
     wishButton.classList.toggle('fa')
 }
 
+const emptyCartEl = document.querySelector('.empty-wishlist');
 // Update cart after change product inputs.
-const updateQuantityByInput = (id) => {
-    const quantityIncreaseButtons = document.querySelectorAll('.product-quantity-inc');
-    const quantityDecreaseButtons = document.querySelectorAll('.product-quantity-dec');
+const updateQuantityByInput = (id, ev) => {
     const item = cart.getItem(id);
-    quantityIncreaseButtons.forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            cart.addToCart(item);
-            updateProdButton(id);
-    })})
-    quantityDecreaseButtons.forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.stopImmediatePropagation();
-            if(item.quantity == 1) {
-                cart.removeFromCart(item)
-            } else {
-                cart.decreaseItemQuantity(item)
-            }
-            updateProdButton(id);
-        })
-    })
-}
-
-//Event listener to buttons on product section
-products.addEventListener('click', (ev) => {
-    try {
-        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
-    } catch {
-        return
-    }
-    getItem(prodId).then((item) => {
-        //Add item to Cart after click add to cart button
-        if (ev.target.id === 'addToCart') {
-            const quantityEl = createInputElement();
-            cart.addToCart(item);
-            ev.target.parentElement.prepend(quantityEl);
-            ev.target.remove();
-            updateQuantityByInput(prodId);
+    if(ev.target.closest('#increase')) {
+        cart.addToCart(item);
+        updateProdButton(id);
+    } else if(ev.target.closest('#decrease')) {
+        if(item.quantity == 1) {
+            cart.removeFromCart(item);
+            !cart.items.length && cartBodyEl.append(emptyCartEl.cloneNode(true));
+        } else {
+            cart.decreaseItemQuantity(item)
         }
-        //Event listener to inputs which is visible after the product was added to the cart.
-        //Add item to wish list after click heart icon.
-        //  else if (ev.target.nodeName === "I") {
-        //     let status = ev.target.dataset.status
-        //     status == 0 ?
-        //     wish.addToCart(item) :
-        //     wish.removeFromCart(item);
-        //     updateWishButton(prodId);
-        // }
-    })
-})
-
+        updateProdButton(id);
+    }
+}
 
 // Show cart or wish body DOM when click switch buttons at the top of the cart window
 const showCartBody = (switchBtnEl) => {
@@ -157,74 +183,55 @@ const showCartBody = (switchBtnEl) => {
     switchBtnEl.classList.add('is-active');
     if (switchBtnEl.id === 'cartBtn') {
         switchWishBtn.classList.remove('is-active');
-        cartBody.classList.add('is-visible');
-        wishBody.classList.remove('is-visible');
+        cartBodyEl.classList.add('is-visible');
+        wishBodyEl.classList.remove('is-visible');
         totalPrice.textContent = cart.totalPrice;
     } else if (switchBtnEl.id === 'wishBtn') {
         switchCartBtn.classList.remove('is-active');
-        wishBody.classList.add('is-visible')
-        cartBody.classList.remove('is-visible');
+        wishBodyEl.classList.add('is-visible')
+        cartBodyEl.classList.remove('is-visible');
         totalPrice.textContent = wish.totalPrice;
     }
     updateCartHeader();
 }
 
-// Event listener to navbar links - opens cart or wish window and load product elements
-const navLinks = document.querySelectorAll('.navbar-link');
-navLinks.forEach((cartLink) => {
-    cartLink.addEventListener('click', openCart)
-})
-
-cartLink.addEventListener('click', () => {
-    loadProds(cart, cartBody);
-    loadProds(wish, wishBody);
-    showCartBody(switchCartBtn);
-});
-wishLink.addEventListener('click', () => {
-    loadProds(wish, wishBody);
-    loadProds(cart, cartBody);
-    showCartBody(switchWishBtn);
-});
-
-// Event listener to switch buttons on the top of cart window
-switchCartBtn.addEventListener('click', () => showCartBody(switchCartBtn))
-switchWishBtn.addEventListener('click', () => showCartBody(switchWishBtn))
-
 // Delete item on cart - (event listener to delete button on cart window)
-const caryBodyEl = document.querySelectorAll('.cart-body');
-caryBodyEl.forEach(cartBody => {
-    cartBody.addEventListener('click', (ev) => {
-        try {
-            var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
-        } catch {
-            return
-        }
-        if (ev.target.closest('.product-quantity-btn')) {
-            const cartQuantityEl = ev.target.closest('.product-quantity');
-            const cartQuantityInput = cartQuantityEl.querySelector('input')
-            cartQuantityInput.value === '0' && cartuantityEl.parentElement.remove();
-            updateQuantityByInput(prodId);
-            updateProdButton(prodId);
-            cartQuantityInput.value = cart.getItem(prodId).quantity;
-            totalPrice.textContent = cart.totalPrice;
-        } else if (ev.target.id === "deleteItem") {
-            if(cartBody.classList.contains('cart-section')) {
-                const item = cart.getItem(prodId);
-                cart.removeFromCart(item);
-                totalPrice.textContent = cart.totalPrice;
-                updateProdButton(prodId);   
-            } else {
-                const item = wish.getItem(prodId);
-                wish.removeFromCart(item);
-                totalPrice.textContent = wish.totalPrice;
-                updateWishButton(prodId);
-            }
-            ev.target.parentElement.remove();
-        }
-        updateCartHeader();
-    })
+cartBodyEl.addEventListener('click', (ev) => {
+    try {
+        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+    } catch {
+        return
+    }
+    if (ev.target.matches('.product-quantity-btn')) {
+        const cartQuantityEl = ev.target.closest('.product-quantity');
+        const cartQuantityInput = cartQuantityEl.querySelector('input');
+        updateQuantityByInput(prodId, ev);
+        totalPrice.textContent = cart.totalPrice;
+        cartQuantityInput.value = cart.getItem(prodId) ? cart.getItem(prodId).quantity : 0
+        cartQuantityInput.value === '0' &&
+        ev.target.closest('.cart-item').remove();
+    } else if (ev.target.matches('#deleteItem')) {
+        const item = cart.getItem(prodId);
+        cart.removeFromCart(item);
+        totalPrice.textContent = cart.totalPrice;
+        updateProdButton(prodId);
+        !cart.items.length && cartBodyEl.appendChild(emptyCartEl.cloneNode(true));
+        ev.target.closest('.cart-item').remove();
+    }
+    updateCartHeader();
 })
 
+wishBodyEl.addEventListener('click', (ev) => {
+    if(ev.target.matches('.delete-btn')) {
+        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+        const item = wish.getItem(prodId);
+        wish.removeFromCart(item);
+        totalPrice.textContent = wish.totalPrice;
+        updateWishButton(prodId);
+        ev.target.closest('.cart-item').remove();
+        !wish.items.length && wishBodyEl.appendChild(emptyCartEl.cloneNode(true));
+        updateCartHeader();
+}})
 
-
-
+//Slider Animation
+sliderTimeout();

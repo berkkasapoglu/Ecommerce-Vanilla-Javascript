@@ -1,24 +1,21 @@
 const createCartElement = (prod, cartBodyDOM) => {
     const container = document.createElement('div');
-    container.classList.add('cart-item', 'row');
+    container.classList.add('cart-item');
     container.setAttribute('data-id', prod.id);
+
+    const row = document.createElement('div');
+    row.classList.add('row');
 
     const img = document.createElement('img');
     img.src = prod.image;
     img.classList.add('cart-image')
 
+    const cartItemDiv = document.createElement('div');
+    cartItemDiv.classList.add('cart-item-specs')
+
     const hTag = document.createElement('h4')
     hTag.classList.add('cart-header')
     hTag.textContent = prod.title
-
-    const stars = document.createElement('div');
-    for(let i=0; i<4; i++) {
-        const checkedStar = document.createElement('i')
-        checkedStar.classList.add('fa', 'fa-star', 'checked');
-        stars.appendChild(checkedStar);
-    }
-    const star = document.createElement('i')
-    star.classList.add('far', 'fa-star');
 
     const priceCurrency = document.createElement('p')
     priceCurrency.className = "cart-price";
@@ -28,21 +25,51 @@ const createCartElement = (prod, cartBodyDOM) => {
     priceValue.setAttribute('id', 'priceValue')
     priceCurrency.appendChild(priceValue)
 
+    const btnRow = document.createElement('div');
+    btnRow.classList.add('row');
     const btn = document.createElement('button')
     btn.textContent = 'Delete'
     btn.classList.add('delete-btn')
     btn.id = 'deleteItem';
 
-    container.appendChild(img)
-    container.appendChild(hTag)
-    container.appendChild(stars)
-    container.appendChild(priceCurrency)
+    
+
+    
+    row.appendChild(img)
+    cartItemDiv.appendChild(hTag)
     const input = createInputElement();
     !cartBodyDOM.classList.contains('wish-section') &&
-    container.appendChild(input)
-    container.appendChild(btn)
+    cartItemDiv.appendChild(input)
+    btnRow.appendChild(btn);
+    btnRow.appendChild(priceCurrency)
+    cartItemDiv.appendChild(btnRow)
+    row.appendChild(cartItemDiv);
+    container.appendChild(row)
+
+
+
     return container
 }
+
+{/* <div class="cart-item" data-id="3">
+    <div class="row">
+        <img src="./images/products/headphone/headphone2.jpeg" class="cart-image">
+        <div class="cart-item-specs">
+            <h4 class="cart-header">Sony WH-CH510</h4>
+            <div class="product-quantity">
+                <button id="decrease" class="product-quantity-dec product-quantity-btn">
+                <i class="fas fa-minus fa-sm"></i></button><input type="Number" min="0" value="1" class="product-quantity-inp">
+                <button id="increase" class="product-quantity-inc product-quantity-btn">
+                    <i class="fas fa-plus fa-sm"></i>
+                </button>
+            </div>
+            <div class="row">
+                <button class="delete-btn" id="deleteItem">Delete</button>
+                <p class="cart-price">$<span id="priceValue">265</span></p>
+            </div>
+        </div>
+    </div>
+</div> */}
 
 const createInputElement = () => {
     const div = document.createElement('div')

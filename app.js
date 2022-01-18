@@ -7,7 +7,9 @@ const products = data.products;
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
-    res.render('index.ejs', { products });
+    const categories = products.map(product => product.category);
+    const uniqueCategories = categories.filter((product, idx, arr) => arr.indexOf(product) === idx);
+    res.render('index.ejs', { products, categories:uniqueCategories });
 })
 
 app.get('/data/:id', (req, res) => {

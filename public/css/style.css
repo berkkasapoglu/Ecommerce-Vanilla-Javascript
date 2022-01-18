@@ -270,7 +270,7 @@ header {
     text-align: center;
     border: .3px solid var(--clr-other-strong);
     padding: 1rem 0;
-    flex-basis: 30%;
+    flex-basis: 23%;
     margin-bottom: 4rem;
     margin-left: 1rem;
     font-size: var(--font-size-s);
@@ -601,28 +601,63 @@ footer *{
 
 /* --------------- Filter Buttons ----------------- */
 .filters {
+    flex: 0 0 15rem;
     padding-bottom: 3rem;
-    text-align: center;
+    border: 1px solid rgba(185, 166, 98, .1);
+}
+
+.filter-header {
+    margin-top: 1rem;
+    font-weight: var(--f-strong);
+    color: var(--clr-other-strong);
+    padding-left: 1rem;
+}
+
+.category-filter {
+    border-bottom: 1px solid rgba(185, 166, 98, .1);
+
+    padding-left: 1rem;
+}
+
+.price-filter {
+    border-bottom: 1px solid rgba(185, 166, 98, .1);
+}
+
+.price-filter-inputs input {
+    width: 3rem;
+    padding: .5rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    border-radius: .5rem;
+    border: 2px solid var(--clr-other);
+    outline: none;
 }
 
 .filter-btn {
-    border: 0;
-    font-size: var(--font-size-xs);
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    border: none;
     background-color: var(--clr-other);
-    border-radius: .4rem;
-    transition: .4s;
-    margin-bottom: .5rem;
+    border-radius: .5rem;
+    transition: .3s linear;
 }
 
 .filter-btn:hover {
     background-color: var(--clr-other-strong);
 }
 
-.filter-selected {
-    background-color: var(--clr-other-strong);
+.price-filter-inputs input:focus {
+    border: 2px solid var(--clr-other-strong);
+}
+.price-filter input::-webkit-inner-spin-button,
+.price-filter input::-webkit-outer-spin-button {
+    -webkit-appearance: none; 
 }
 
-@media (min-width: 66rem) {
+@media (max-width: 70rem) {
+    .filters {
+        flex: 0 0 12rem;
+    }
     .product {
         flex-basis: 30%;
     }
@@ -636,11 +671,9 @@ footer *{
         --font-size-s: 1rem;
         --font-size-xs: .9rem;
     }
-
     .product {
-        flex-basis: 45%;
+        flex-basis: 60%;
     }
-
     .header-content {
         margin-bottom: 2rem;
     }
@@ -670,7 +703,7 @@ footer *{
     }
 }
 
-@media (max-width: 30rem) {
+@media (max-width: 36rem) {
 
     :root {
         --font-size-xl: 1.7rem;
@@ -680,7 +713,9 @@ footer *{
         --font-size-xs: .8rem;
         --font-size-xxs: .7rem;
     }
-
+    .product {
+        flex-basis: 60%;
+    }
     /* Header classes */
     .header-section img {
         height: 16rem;

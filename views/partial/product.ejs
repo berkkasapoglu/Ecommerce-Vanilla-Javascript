@@ -1,0 +1,20 @@
+<% for(let product of products) { %>
+    <div class="product scale" data-id="<%= product.id %>">
+        <img src="<%= product.image %>" alt="" class="product-image">
+        <h4 class="product-header">
+            <%= product.title %>
+        </h4>
+        <i class="fa fa-star checked"></i>
+        <i class="fa fa-star checked"></i>
+        <i class="fa fa-star checked"></i>
+        <i class="fa fa-star checked"></i>
+        <i class="far fa-star "></i>
+        <p class="product-price">
+            <%= product.price %>$
+        </p>
+        <div class="row align-center" id="prodQuantity">
+            <button class="btn btn-primary" id="addToCart">Add to Cart</button>
+            <i class="far fa-heart" id="addWish" data-status="0"></i>
+        </div>
+    </div>
+    <% } %>

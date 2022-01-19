@@ -1,33 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
-    <title>Document</title>
-
-</head>
-
-<body>
-    <header>
-        <nav class="navbar row">
-            <a href=""><img src="images/logo.png" alt="logo" class="logo"></a>
-            <form action="" class="search-form">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search Product.." class="search-input">
-                    <button class="fas fa-search"></button>
-                </div>
-            </form>
-            <div class="right row">
-                <a href="#" class="navbar-link" id="wishLink">Favourites</a>
-                <a href="#" class="navbar-link" id="cartLink">Cart</a>
-            </div>
-        </nav>
+ <% layout('layouts/boilerplate') %>   
         <div class="slider header-full">
             <div class="row header-section section-space slide">
                 <div class="header-content">
@@ -60,11 +31,11 @@
     <section class="section-space row product-section" id="prods">
         <div class="filters">
             <h4 class="filter-header">Filter</h4>
-            <h4 class="filter-header">Categories</h4>
+            <h4 class="filter-header">Category</h4>
             <div class="category-filter col">
                 <%  for(let category of categories) { %>
                     <div>
-                        <input id="<%= category %>" type="checkbox">
+                        <input class="filter-item" id="<%= category %>" type="checkbox"  value="<%= category %>">
                         <label for="<%= category %>"><%= category %></label>
                     </div>
                 <% } %>
@@ -75,45 +46,14 @@
                     <input type="number" placeholder="Min">
                     <input type="number" placeholder="Max">
                 </div>
-                <button class="filter-btn">Set price</button>
+                <a class="filter-btn" href="#">Apply Filter</a>
             </div>
         </div>
         <div class="row products">
-            <% for(let product of products) { %>
-                <div class="product scale" data-id="<%= product.id %>">
-                    <img src="<%= product.image %>" alt="" class="product-image">
-                    <h4 class="product-header">
-                        <%= product.title %>
-                    </h4>
-                    <i class="fa fa-star checked"></i>
-                    <i class="fa fa-star checked"></i>
-                    <i class="fa fa-star checked"></i>
-                    <i class="fa fa-star checked"></i>
-                    <i class="far fa-star "></i>
-                    <p class="product-price">
-                        <%= product.price %>$
-                    </p>
-                    <div class="row align-center" id="prodQuantity">
-                        <button class="btn btn-primary" id="addToCart">Add to Cart</button>
-                        <i class="far fa-heart" id="addWish" data-status="0"></i>
-                    </div>
-                </div>
-                <% } %>
+            <%- include('partial/product') %>
         </div>
     </section>
-    <footer>
-        <div class="container section-space text-center">
-            <h3>Contact Us</h3>
-            <p><i class="fas fa-map-marker-alt"></i>
-                42 Dream House, Dreammy street, 7131 Dreamville, USA</p>
-            <p><i class="fas fa-envelope-open-text"></i>
-                company@gmail.com</p>
-            <p><i class="fas fa-phone"></i>
-                111-111-111</p>
-            <p><i class="fas fa-plane-departure"></i>
-                Ocean City,USA</p>
-        </div>
-    </footer>
+    
     <div class="protection"></div>
     <div class="cart">
         <div class="row">
@@ -154,7 +94,4 @@
 
     <script src="js/index.js" type="module"></script>
     <script src="js/product.js" type="module"></script>
-    
-</body>
-
-</html>
+    <script src="js/filter.js" type="module"></script>

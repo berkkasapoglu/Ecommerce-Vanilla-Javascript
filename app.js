@@ -21,14 +21,18 @@ app.get('/data/:id', (req, res) => {
     res.json(item);
 })
 
-app.get('/c/', (req, res) => {
-    const { categories } = req.query;
-    const filteredProducts = products.filter(product => {
+app.get('/c/api/', (req, res) => {
+    const { categories, price } = req.query;
+    const minPrice = price.split(' ')[0];
+    const maxPrice = price.split(' ')[1];
+    let filteredProducts = products.filter(product => {
         return categories.indexOf(product.category) >= 0;
     })
+    filteredProducts = filteredProducts.filter(product => (product.price>minPrice && product.price<maxPrice));
+    console.log(filteredProducts);
     categories ?
-    res.render('partial/product.ejs', { products: filteredProducts }) :
-    res.render('partial/product.ejs', { products })
+    res.json(filteredProducts) :
+    res.json(products)
 })
 
 

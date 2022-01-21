@@ -1,3 +1,6 @@
+import AlertMessage from './alert.js'
+
+const alertMessage = new AlertMessage();
 function Cart() {
     this.totalPrice = 0;
     this.itemsInCart = 0;
@@ -11,9 +14,11 @@ Cart.prototype.addToCart = function(addedItem) {
     if(!itemInCart) {
         addedItem.quantity = 1;
         this.items.push(addedItem);
+        alertMessage.showAlert('Product added to your cart', 'success');
     } else {
         const itemInCart = this.items.find(item => item.id === addedItem.id)
         itemInCart.quantity++;
+        alertMessage.showAlert('Number of product has been increased', 'update');
     }
     
 }
@@ -22,6 +27,7 @@ Cart.prototype.decreaseItemQuantity = function(decreasedItem) {
     decreasedItem.quantity--;
     this.itemsInCart--;
     this.totalPrice -= decreasedItem.price;
+    alertMessage.showAlert('Number of product has been decreased', 'warning');
 }
 
 Cart.prototype.removeFromCart = function(removedItem) {
@@ -30,6 +36,7 @@ Cart.prototype.removeFromCart = function(removedItem) {
     this.itemsInCart-=itemInCart.quantity;
     this.totalPrice-=(itemInCart.quantity*itemInCart.price);
     this.items.splice(itemIndex, 1)
+    alertMessage.showAlert('Product removed from your cart', 'danger');
 }
 
 Cart.prototype.getItem = function(id) {

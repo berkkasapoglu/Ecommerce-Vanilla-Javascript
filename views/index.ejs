@@ -1,4 +1,5 @@
  <% layout('layouts/boilerplate') %>   
+    <header class="header-circle header-background">
         <div class="slider header-full">
             <div class="row header-section section-space slide">
                 <div class="header-content">
@@ -28,7 +29,7 @@
         <a class="prev">&#10094;</a>
         <a class="next">&#10095;</a>
     </header>
-    <section class="section-space row product-section" id="prods">
+    <section class="section-space row" id="prods">
         <div class="filters">
             <h4 class="filter-header">Filter</h4>
             <h4 class="filter-header">Category</h4>
@@ -40,11 +41,6 @@
                     </div>
                 <% } %>
             </div>
-            Size
-            <div class="category-filter filter-wrapper">
-                <input class="filter-item" type="checkbox" id="size" value="Big" data-title="size">
-                <label for="size">Big</label>
-            </div>
             <div class="price-filter filter-wrapper">
                 <h4 class="filter-header">Price range</h4>
                 <div class="price-filter-inputs row">
@@ -54,13 +50,11 @@
                 <a class="filter-btn disabled" href="#" data-title="price">Apply Filter</a>
             </div>
         </div>
-        <div class="row products">
+        <div class="row products product-wrapper">
             <% for(let product of products) { %>
                 <div class="product scale" data-id="<%= product.id %>">
-                    <img src="<%= product.image %>" alt="" class="product-image">
-                    <h4 class="product-header">
-                        <%= product.title %>
-                    </h4>
+                    <a href="/products/<%= product.id %>"><img src="/<%= product.image %>" alt="" class="product-image"></a>
+                    <a href="/products/<%= product.id %>"><h4 class="product-header"><%= product.title %></h4></a>
                     <i class="fa fa-star checked"></i>
                     <i class="fa fa-star checked"></i>
                     <i class="fa fa-star checked"></i>
@@ -71,51 +65,13 @@
                     </p>
                     <div class="row align-center" id="prodQuantity">
                         <button class="btn btn-primary" id="addToCart">Add to Cart</button>
-                        <i class="far fa-heart" id="addWish" data-status="0"></i>
+                        <i class="far fa-heart" id="addToWish" data-status="0"></i>
                     </div>
                 </div>
                 <% } %>
         </div>
     </section>
-    
-    <div class="protection"></div>
-    <div class="cart">
-        <div class="row">
-            <div class="cart-fav is-active " id="cartBtn"><i class="fas fa-cart-plus"></i>
-                CART (<span id="cartQuantity">0</span>)</a></div>
-            <div class="cart-fav" id="wishBtn"><i class="far fa-heart"></i>
-                FAVORITES (<span id="wishQuantity">0</span>)</a></div>
-        </div>
-        <div class="cart-headers text-center">
-            <h3>Product</h3>
-            <h3>Review</h3>
-            <h3>Price</h3>
-        </div>
-        <div class="cart-body cart-section is-visible">
-            <div class="empty-wishlist text-center">
-                <img class="empty-logo"
-                    src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
-                    alt="">
-                <h3 class="header-tag">EMPTY CART</h3>
-            </div>
-        </div>
-        <div class="cart-body wish-section">
-                <div class="empty-wishlist text-center">
-                    <img class="empty-logo"
-                        src="https://static.pullandbear.net/2/static2/itxwebstandard/images/icons/shopcart-buy.png?t=20211116034503"
-                        alt="">
-                    <h3 class="header-tag">EMPTY CART</h3>
-                </div>
-        </div>
-        <div class="cart-bottom">
-            <div class="row">
-                <h3 class="header-tag">TOTAL</h3>
-                <h4 class="price"><span id="totalPrice">0</span>$</h4>
-            </div>
-            <button class="btn-secondary"><span class="btn-text">CONTINUE</span></button>
-        </div>
-    </div>
-
-    <script src="js/index.js" type="module"></script>
-    <script src="js/product.js" type="module"></script>
     <script src="js/filter.js" type="module"></script>
+    <script src="js/slider.js" type="module"></script>
+
+

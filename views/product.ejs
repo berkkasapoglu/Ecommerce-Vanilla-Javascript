@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate') %>
+    <section class="container row section-space product-section" data-id="<%= product.id %>">
+        <div class="product-left-container">
+            <img src="/<%= product.image %>" alt="">
+        </div>
+        <div class="product-right-container">
+            <h2 class="header-tag"><%= product.title %></h2>
+            <h4 class="subheader-tag"><%= product.category %></h4>
+            <p class="product-price"><span><%= product.price %></span>$</p>
+            <p class="product-description">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda nostrum maiores doloribus sit optio libero eligendi vero distinctio ab minima? Officiis iure aspernatur quia! Obcaecati tempora nostrum eligendi consequatur blanditiis.
+                Maiores deleniti magnam deserunt voluptatum pariatur sunt architecto repellendus eius aspernatur commodi autem, ex ratione incidunt, a ullam dicta quam provident! Quidem laudantium fugit voluptate dolores culpa necessitatibus error placeat.
+                Dolorem sunt ipsa quibusdam. Labore animi porro velit facere eius magni, vel error unde est beatae enim nulla voluptate alias pariatur exercitationem provident sequi ea itaque soluta mollitia rem ab?
+            </p>
+            <div class="row product-wrapper" id="prodQuantity">
+                <button class="btn btn-primary" id="addToCart">Add to Cart</button>
+                <i class="far fa-heart" id="addToWish" data-status="0"></i>
+            </div>
+        </div>
+    </section>

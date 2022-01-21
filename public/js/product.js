@@ -7,7 +7,7 @@ const createCartElement = (prod, cartBodyDOM) => {
     row.classList.add('row');
 
     const img = document.createElement('img');
-    img.src = prod.image;
+    img.src = '/' + prod.image;
     img.classList.add('cart-image')
 
     const cartItemDiv = document.createElement('div');
@@ -51,26 +51,6 @@ const createCartElement = (prod, cartBodyDOM) => {
     return container
 }
 
-{/* <div class="cart-item" data-id="3">
-    <div class="row">
-        <img src="./images/products/headphone/headphone2.jpeg" class="cart-image">
-        <div class="cart-item-specs">
-            <h4 class="cart-header">Sony WH-CH510</h4>
-            <div class="product-quantity">
-                <button id="decrease" class="product-quantity-dec product-quantity-btn">
-                <i class="fas fa-minus fa-sm"></i></button><input type="Number" min="0" value="1" class="product-quantity-inp">
-                <button id="increase" class="product-quantity-inc product-quantity-btn">
-                    <i class="fas fa-plus fa-sm"></i>
-                </button>
-            </div>
-            <div class="row">
-                <button class="delete-btn" id="deleteItem">Delete</button>
-                <p class="cart-price">$<span id="priceValue">265</span></p>
-            </div>
-        </div>
-    </div>
-</div> */}
-
 const createInputElement = () => {
     const div = document.createElement('div')
     div.classList.add('product-quantity');
@@ -109,5 +89,6 @@ const createButtonElement = () => {
     button.textContent = 'Add to Cart';
     return button;
 }
+
 
 export { createCartElement, createInputElement, createButtonElement };

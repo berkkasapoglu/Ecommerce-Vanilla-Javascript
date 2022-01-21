@@ -1,6 +1,5 @@
 const express = require('express');
 const engine = require('ejs-mate');
-const path = require('path');
 const app = express();
 
 const data = require('./product.json')
@@ -16,24 +15,47 @@ app.get('/', (req, res) => {
     res.render('index.ejs', { products, categories: uniqueCategories });
 })
 
+app.get('/products/:id', (req, res) => {
+    const { id } = req.params;
+    const product = products.find(product => product.id === parseInt(id));
+    res.render('product.ejs', { product });
+})
+
 app.get('/data/:id', (req, res) => {
     const item = products.filter(product => product.id === parseInt(req.params.id))[0]
     res.json(item);
 })
 
-app.get('/c/api/', (req, res) => {
-    const { categories, price } = req.query;
-    const minPrice = price.split(' ')[0];
-    const maxPrice = price.split(' ')[1];
-    let filteredProducts = products.filter(product => {
-        return categories.indexOf(product.category) >= 0;
-    })
-    filteredProducts = filteredProducts.filter(product => (product.price>minPrice && product.price<maxPrice));
-    console.log(filteredProducts);
-    categories ?
-    res.json(filteredProducts) :
-    res.json(products)
+app.get('/api/?', async (req, res) => {
+    if(Object.keys(req.query).length) {
+        const filteredData = await filterByQuery(req,res);
+        res.json(filteredData);
+    }
+    else res.json(products);
 })
+
+
+
+const filterByQuery = async (req, res) => {
+    const { category, price } = req.query
+    const categories = category ? category.split(',') : 'All';
+    let [minPrice, maxPrice] = price ? price.split('-') : ['*', '*'];
+    const filteredProducts = await products.filter(product => {
+        return ((categories === 'All' ?
+        true:
+        categories.indexOf(product.category) >= 0) 
+        && 
+        (minPrice === '*' ?
+        true :
+        product.price > minPrice) 
+        &&
+        (maxPrice === '*' ?
+        true :
+        product.price < maxPrice)
+        )
+    })
+    return filteredProducts
+}
 
 
 app.listen(3000);

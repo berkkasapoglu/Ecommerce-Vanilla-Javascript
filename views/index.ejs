@@ -30,26 +30,29 @@
         <a class="next">&#10095;</a>
     </header>
     <section class="section-space row" id="prods">
-        <div class="filters">
-            <h4 class="filter-header">Filter</h4>
-            <h4 class="filter-header">Category</h4>
-            <div class="category-filter col filter-wrapper">
-                <%  for(let category of categories) { %>
-                    <div>
-                        <input class="filter-item" id="<%= category %>" type="checkbox"  value="<%= category %>" data-title="category">
-                        <label for="<%= category %>"><%= category %></label>
-                    </div>
-                <% } %>
-            </div>
-            <div class="price-filter filter-wrapper">
-                <h4 class="filter-header">Price range</h4>
-                <div class="price-filter-inputs row">
-                    <input class="range-filters" type="number" placeholder="Min" id="minPrice">
-                    <input class="range-filters" type="number" placeholder="Max" id="maxPrice">
+        <form action="" class="filter-form">
+            <div class="filters">
+                <h4 class="filter-header">Filter</h4>
+                <h4 class="filter-header">Category</h4>
+                <div class="category-filter col filter-wrapper">
+                    <%  for(let category of categories) { %>
+                        <div>
+                            <input class="filter-item" id="<%= category %>" type="checkbox"  value="<%= category %>" data-title="category">
+                            <label for="<%= category %>"><%= category %></label>
+                        </div>
+                    <% } %>
                 </div>
-                <a class="filter-btn disabled" href="#" data-title="price">Apply Filter</a>
+                <div class="price-filter filter-wrapper">
+                    <h4 class="filter-header">Price range</h4>
+                    <div class="price-filter-inputs row">
+                        <input class="range-filters" type="number" placeholder="Min" id="minPrice">
+                        <input class="range-filters" type="number" placeholder="Max" id="maxPrice">
+                    </div>
+                    <a class="filter-btn disabled" href="#" data-title="price">Apply Filter</a>
+                </div>
+                <a class="filter-reset" href="#">Reset</a>
             </div>
-        </div>
+        </form>
         <div class="row products product-wrapper">
             <% for(let product of products) { %>
                 <div class="product scale" data-id="<%= product.id %>">

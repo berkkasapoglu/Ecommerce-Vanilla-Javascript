@@ -21,20 +21,27 @@ app.get('/products/:id', (req, res) => {
     res.render('product.ejs', { product });
 })
 
+app.get('/search', (req, res) => {
+    const { q } = req.query;
+    const searchedProduct = products.find(product => product.title === q.split('-').join(' '));
+    console.log([searchedProduct]);
+    const allCategories = products.map(product => product.category);
+    const uniqueCategories = allCategories.filter((product, idx, arr) => arr.indexOf(product) === idx);
+    res.render('index.ejs', { products: [searchedProduct], categories: uniqueCategories })
+})
+
 app.get('/data/:id', (req, res) => {
     const item = products.filter(product => product.id === parseInt(req.params.id))[0]
     res.json(item);
 })
 
-app.get('/api/?', async (req, res) => {
+app.get('/api/', async (req, res) => {
     if(Object.keys(req.query).length) {
         const filteredData = await filterByQuery(req,res);
         res.json(filteredData);
     }
     else res.json(products);
 })
-
-
 
 const filterByQuery = async (req, res) => {
     const { category, price } = req.query

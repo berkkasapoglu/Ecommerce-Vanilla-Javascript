@@ -671,7 +671,7 @@ footer *{
     color: #000;
     margin-left: 1rem;
     margin-bottom: 1rem;
-    padding: .4rem 1rem;
+    padding: .4rem .5rem;
     border: none;
     background-color: var(--clr-other);
     border-radius: .5rem;
@@ -680,6 +680,19 @@ footer *{
 }
 
 .filter-btn:hover {
+    background-color: var(--clr-other-strong);
+}
+
+.filter-reset {
+    background-color: var(--clr-other);
+    transition: .3s linear;
+    padding: .4rem .5rem;
+    border-radius: .5rem;
+    color: #000;
+    font-size: var(--font-size-xxs);
+}
+
+.filter-reset:hover {
     background-color: var(--clr-other-strong);
 }
 

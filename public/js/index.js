@@ -82,7 +82,7 @@ const addWishEl = (item, ev) => {
         status == 0 ?
         wish.addToCart(item) :
         wish.removeFromCart(item);
-        updateWishButton(item.id);
+        updateWishButton(item._id);
     }
 }
 
@@ -180,7 +180,7 @@ const showCartBody = (switchBtnEl) => {
 // Delete item on cart - (event listener to delete button on cart window)
 cartBodyEl.addEventListener('click', (ev) => {
     try {
-        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+        var prodId = ev.target.closest('[data-id]').dataset.id;
     } catch {
         return
     }
@@ -205,7 +205,7 @@ cartBodyEl.addEventListener('click', (ev) => {
 
 wishBodyEl.addEventListener('click', (ev) => {
     if(ev.target.matches('.delete-btn')) {
-        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+        var prodId = ev.target.closest('[data-id]').dataset.id;
         const item = wish.getItem(prodId);
         wish.removeFromCart(item);
         totalPrice.textContent = wish.totalPrice;
@@ -220,7 +220,7 @@ const products = document.querySelector('.product-wrapper');
 //Event listener to all products section
 products.addEventListener('click', (ev) => {
     try {
-        var prodId = parseInt(ev.target.closest('[data-id]').dataset.id);
+        var prodId = ev.target.closest('[data-id]').dataset.id;
     } catch {
         return
     }

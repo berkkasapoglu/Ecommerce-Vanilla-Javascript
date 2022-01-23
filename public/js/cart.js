@@ -8,7 +8,7 @@ function Cart() {
 }
 
 Cart.prototype.addToCart = function(addedItem) {
-    const itemInCart =  this.items.find(item => item.id === addedItem.id)
+    const itemInCart =  this.items.find(item => item._id === addedItem._id)
     this.totalPrice += addedItem.price;
     this.itemsInCart++;
     if(!itemInCart) {
@@ -16,7 +16,7 @@ Cart.prototype.addToCart = function(addedItem) {
         this.items.push(addedItem);
         alertMessage.showAlert('Product added to your cart', 'success');
     } else {
-        const itemInCart = this.items.find(item => item.id === addedItem.id)
+        const itemInCart = this.items.find(item => item._id === addedItem._id)
         itemInCart.quantity++;
         alertMessage.showAlert('Number of product has been increased', 'update');
     }
@@ -31,7 +31,7 @@ Cart.prototype.decreaseItemQuantity = function(decreasedItem) {
 }
 
 Cart.prototype.removeFromCart = function(removedItem) {
-    const itemInCart = this.items.find(item => item.id === removedItem.id);
+    const itemInCart = this.items.find(item => item._id === removedItem._id);
     const itemIndex = this.items.indexOf(itemInCart);
     this.itemsInCart-=itemInCart.quantity;
     this.totalPrice-=(itemInCart.quantity*itemInCart.price);
@@ -40,7 +40,7 @@ Cart.prototype.removeFromCart = function(removedItem) {
 }
 
 Cart.prototype.getItem = function(id) {
-    const item = this.items.find(item => item.id === id);
+    const item = this.items.find(item => item._id === id);
     return item;
 }
 

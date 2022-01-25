@@ -1,29 +1,29 @@
  <% layout('layouts/boilerplate') %>   
-    <header class="header-circle header-background">
+    <header class="header-circle header-background section-space">
         <div class="slider header-full">
             <div class="row header-section section-space slide">
                 <div class="header-content">
                     <h2 class="header-tag text-white">PHONES FOR YOU</h2>
                     <h4 class="subheader-tag">Check out for latest prices.</h4>
-                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                    <a class="btn btn-reverse" href="#prods">SHOP NOW</a>
                 </div>
-                <img src=<%="images/banner_01.png" %> alt="" class="header-img">
+                <img src=<%="/images/banner_01.png" %> alt="" class="header-img">
             </div>
             <div class="row header-section section-space slide">
                 <div class="header-content">
                     <h2 class="header-tag text-white">PHONES FOR YOU</h2>
                     <h4 class="subheader-tag">Check out for latest prices.</h4>
-                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                    <a class="btn btn-reverse" href="#prods">SHOP NOW</a>
                 </div>
-                <img src="./images/banner_02.png" alt="" class="header-img">
+                <img src="/images/banner_02.png" alt="" class="header-img">
             </div>
             <div class="row header-section section-space slide">
                 <div class="header-content">
                     <h2 class="header-tag text-white">PHONES FOR YOU</h2>
                     <h4 class="subheader-tag">Check out for latest prices.</h4>
-                    <a class="btn btn-primary" href="#prods">SHOP NOW</a>
+                    <a class="btn btn-reverse" href="#prods">SHOP NOW</a>
                 </div>
-                <img src="images/collection_01.png" alt="" class="header-img">
+                <img src="/images/collection_01.png" alt="" class="header-img">
             </div>
         </div>
         <a class="prev">&#10094;</a>
@@ -45,8 +45,8 @@
                 <div class="price-filter filter-wrapper">
                     <h4 class="filter-header">Price range</h4>
                     <div class="price-filter-inputs row">
-                        <input class="range-filters" type="number" placeholder="Min" id="minPrice">
-                        <input class="range-filters" type="number" placeholder="Max" id="maxPrice">
+                        <input class="range-filters input-main" type="number" placeholder="Min" id="minPrice">
+                        <input class="range-filters input-main" type="number" placeholder="Max" id="maxPrice">
                     </div>
                     <a class="filter-btn disabled" href="#" data-title="price">Apply Filter</a>
                     <a class="filter-reset" href="#">Reset</a>
@@ -75,7 +75,69 @@
                 <% } %>
         </div>
     </section>
-    <script src="js/filter.js" type="module"></script>
-    <script src="js/slider.js" type="module"></script>
+    <i class="fas fa-arrow-down"></i>
+    <section class="section-space container header-section">
+        <h2 class="section-tag">FAQ's</h2>
+        <div class="faq-wrapper">
+            <button class="btn faq-btn">
+                <div class="faq-btn-wrapper">
+                    <h3 class="subsection-tag">How much money should I pay for delivery?</h3>
+                    <i class="fas fa-arrow-circle-down"></i></i>
+                </div>
+                <h3 class="subsection-p faq-subsection">You don't have to pay for delivery. It's totally free!</h3>
+            </button>
+        </div>
+        <div class="faq-wrapper">
+            <button class="btn faq-btn">
+                <div class="faq-btn-wrapper">
+                    <h3 class="subsection-tag">How many days should I wait before reaching you?</h3>
+                    <i class="fas fa-arrow-circle-down"></i></i>
+                </div>
+                <h3 class="subsection-p faq-subsection">It is enough to wait 3-7 days for the delivery.</h3>
+            </button>
+        </div>
+        <div class="faq-wrapper">
+            <button class="btn faq-btn">
+                <div class="faq-btn-wrapper">
+                    <h3 class="subsection-tag">Do you have refund policy? </h3>
+                    <i class="fas fa-arrow-circle-down"></i>
+                </div>
+                <h3 class="subsection-p faq-subsection">Yes, we have.</h3>
+            </button>
+        </div>
+
+    </section>
+    <section class="section-space contact-section container text-center">
+        <h2 class="section-tag">Contact Us</h2>
+        <div class="contact-wrapper">
+            <div class="contact-buttons container">
+                <button class="btn-reverse subsection-tag is-show" data-name="form">Reach Us</button>
+                <button class="btn-reverse subsection-tag" data-name="about">About Us</button>
+            </div>
+            <div class="contact-content-wrapper">
+                <div class="form is-show">
+                    <figure><img src="/images/news2.jpg" alt="" class="contact-image"></figure>
+                    <form action="">
+                        <label for="" class="contact-label">Your Name</label>
+                        <input type="text" class="input-main input-contact" placeholder="Enter Your Name">
+                        <label for="" class="contact-label">Your email</label>
+                        <input type="text" class="input-main input-contact" placeholder="Enter Your Email">
+                        <label for="" class="contact-label">Your Message</label>
+                        <textarea type="text" class="input-main input-contact" rows=5 cols=30 placeholder="Enter your Message"></textarea>
+                        <button type="submit" class="btn btn-primary contact-btn">Submit</button>
+                    </form>
+                </div>
+                <div class="about contact-content">
+                    <h3 class="subsection-tag">Who are we?</h3>
+                    <p class="subsection-p"> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex, dolorum earum. Accusantium temporibus corrupti soluta nobis omnis quas minima ipsam maxime doloribus eius. Vitae velit nesciunt culpa itaque blanditiis et!
+                    Laudantium, animi amet dolorem ipsum numquam iusto maxime voluptatum reprehenderit ipsam nostrum nesciunt eius autem molestiae inventore. Veniam dolore iusto beatae quaerat, omnis impedit praesentium quod reiciendis corrupti perspiciatis exercitationem.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <% block('footer').append('<script src="/js/filter-home.js" type="module"></script>') %>
+    <% block('footer').append('<script src="/js/slider.js" type="module"></script>') %>
+    <% block('footer').append('<script src="/js/faq.js" type="module"></script>') %>
+
 
 

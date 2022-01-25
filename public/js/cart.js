@@ -1,5 +1,5 @@
 import AlertMessage from './alert.js'
-
+const cartCounterEl = document.querySelector('.cart-counter')
 const alertMessage = new AlertMessage();
 function Cart() {
     this.totalPrice = 0;
@@ -20,7 +20,7 @@ Cart.prototype.addToCart = function(addedItem) {
         itemInCart.quantity++;
         alertMessage.showAlert('Number of product has been increased', 'update');
     }
-    
+    cartCounterEl.textContent = `(${this.items.length})`;
 }
 
 Cart.prototype.decreaseItemQuantity = function(decreasedItem) {
@@ -37,6 +37,7 @@ Cart.prototype.removeFromCart = function(removedItem) {
     this.totalPrice-=(itemInCart.quantity*itemInCart.price);
     this.items.splice(itemIndex, 1)
     alertMessage.showAlert('Product removed from your cart', 'danger');
+    cartCounterEl.textContent = `(${this.items.length})`;
 }
 
 Cart.prototype.getItem = function(id) {

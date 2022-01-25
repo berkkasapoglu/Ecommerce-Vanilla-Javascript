@@ -1,7 +1,7 @@
 const createCartElement = (prod, cartBodyDOM) => {
     const container = document.createElement('div');
     container.classList.add('cart-item');
-    container.setAttribute('data-id', prod.id);
+    container.setAttribute('data-id', prod._id);
 
     const row = document.createElement('div');
     row.classList.add('row');

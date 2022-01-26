@@ -152,8 +152,6 @@ textarea {
     text-align: justify;
 }
 /* || Navbar */
-
-
 .navbar {
     justify-content: space-around;
     padding: .5rem 1.4rem;
@@ -328,7 +326,7 @@ textarea {
     border: .5px solid var(--clr-primary);
     padding: 1rem 0;
     flex-basis: 23%;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     margin-left: 1rem;
     font-size: var(--font-size-s);
     border-radius: .5rem;
@@ -428,14 +426,9 @@ textarea {
     pointer-events: none;
 }
 
-.fa-arrow-down {
-    display: block !important;
-    cursor: pointer;
-    width: 2rem;
-    margin: 0 auto;
-    font-size: var(--font-size-xl);
-    margin-bottom: 2rem;
-    transition: .3s ease-out;
+.load-more-wrapper {
+    display: flex;
+    justify-content: center;
 }
 /* || Footer */
 

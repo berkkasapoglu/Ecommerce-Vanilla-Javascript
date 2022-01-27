@@ -4,8 +4,8 @@ import { createCartElement, createInputElement, createButtonElement } from './pr
 const cartWindow = document.querySelector('.cart');
 const totalPrice = document.querySelector('#totalPrice');
 
-const cartLink = document.querySelector('#cartLink');
-const wishLink = document.querySelector('#wishLink');
+const cartLinks = document.querySelectorAll('.cartLink');
+const wishLinks = document.querySelectorAll('.wishLink');
 const switchCartBtn = document.querySelector('#cartBtn');
 const switchWishBtn = document.querySelector('#wishBtn');
 
@@ -93,15 +93,18 @@ navLinks.forEach((cartLink) => {
     cartLink.addEventListener('click', openCart)
 })
 
-cartLink.addEventListener('click', () => {
-    loadProds(cart, cartBodyEl);
-    loadProds(wish, wishBodyEl);
-    showCartBody(switchCartBtn);
-});
-wishLink.addEventListener('click', () => {
-    loadProds(cart, cartBodyEl);
-    loadProds(wish, wishBodyEl);
-    showCartBody(switchWishBtn);
+cartLinks.forEach(cartLink => {
+    cartLink.addEventListener('click', () => {
+        loadProds(cart, cartBodyEl);
+        loadProds(wish, wishBodyEl);
+        showCartBody(switchCartBtn);
+})});
+wishLinks.forEach(wishLink => {
+    wishLink.addEventListener('click', () => {
+        loadProds(cart, cartBodyEl);
+        loadProds(wish, wishBodyEl);
+        showCartBody(switchWishBtn);
+    })
 });
 
 // Event listener to switch buttons on the top of cart window
@@ -233,3 +236,5 @@ products.addEventListener('click', (ev) => {
         }
     })
 })
+
+export { cart, wish }

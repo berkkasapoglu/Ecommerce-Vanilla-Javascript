@@ -119,13 +119,13 @@
             <div class="contact-content-wrapper">
                 <div class="form is-show">
                     <figure><img src="/images/news2.jpg" alt="" class="contact-image"></figure>
-                    <form action="">
+                    <form action="/" method="POST">
                         <label for="" class="contact-label">Your Name</label>
-                        <input type="text" class="input-main input-contact" placeholder="Enter Your Name">
+                        <input type="text" class="input-main input-contact" placeholder="Enter Your Name" required>
                         <label for="" class="contact-label">Your email</label>
-                        <input type="text" class="input-main input-contact" placeholder="Enter Your Email">
+                        <input type="text" class="input-main input-contact" placeholder="Enter Your Email" required>
                         <label for="" class="contact-label">Your Message</label>
-                        <textarea type="text" class="input-main input-contact" rows=5 cols=30 placeholder="Enter your Message"></textarea>
+                        <textarea type="text" class="input-main input-contact" rows=5 cols=30 placeholder="Enter your Message" required></textarea>
                         <button type="submit" class="btn btn-primary contact-btn">Submit</button>
                     </form>
                 </div>
@@ -136,6 +136,7 @@
                 </div>
             </div>
         </div>
+
     </section>
     <% block('footer').append('<script src="/js/filter-home.js" type="module"></script>') %>
     <% block('footer').append('<script src="/js/slider.js" type="module"></script>') %>

@@ -1,4 +1,5 @@
 import Filter from './filter.js'
+import { cart, wish } from './index.js'
 
 //Checkbox DOMs
 const filterItemEls = document.querySelectorAll('.filter-item');
@@ -13,6 +14,7 @@ const minPriceFilter = new Filter('pmin')
 const maxPriceFilter = new Filter('pmax')
 const pageFilter = new Filter('p')
 
+//Apply Category filter
 filterItemEls.forEach(filter => {
     filter.addEventListener('click', (ev) => {
         categoryFilter.updateQuery(ev.target.value);
@@ -23,6 +25,7 @@ filterItemEls.forEach(filter => {
     })
 })
 
+//Apple price filter
 filterBtn.addEventListener('click', (ev) => {
     ev.preventDefault();
     let minUpdateUrl;
@@ -44,6 +47,7 @@ filterBtn.addEventListener('click', (ev) => {
     displayFilteredCategory();
 })
 
+//Check price input element is filled then makes button active
 minPrice.addEventListener('input', (ev) => {
     if(minPrice.value || maxPrice.value) filterBtn.classList.remove('disabled');
     else filterBtn.classList.add('disabled');
@@ -53,6 +57,8 @@ maxPrice.addEventListener('input', (ev) => {
     if(minPrice.value || maxPrice.value) filterBtn.classList.remove('disabled');
     else filterBtn.classList.add('disabled');
 })
+
+//After clicked reset button reset all checkboxes and url query string.
 const filterResetBtnEl = document.querySelector('.filter-reset')
 const filterFormEl = document.querySelector('.filter-form');
 filterResetBtnEl.addEventListener('click', (ev) => {
@@ -66,6 +72,16 @@ filterResetBtnEl.addEventListener('click', (ev) => {
     displayFilteredCategory();
 })
 
+//Load product and refresh url with page filter.
+const loadMoreProduct = async () => {
+    //request other product from database if next page exists.
+    if(pageFilter.next) {
+        const filteredEl = await createHtmlElement();
+        productsEl.insertAdjacentHTML('beforeend', filteredEl.join(''));
+    }
+}
+
+//Load other page product after clicked load more button.
 const loadProdEl = document.querySelector('.load-more')
 pageFilter.next = 2;
 loadProdEl.addEventListener('click', async () => {
@@ -84,18 +100,38 @@ const displayFilteredCategory = async () => {
     productsEl.innerHTML = filteredEl.join('');
 }
 
-const loadMoreProduct = async () => {
-    if(pageFilter.next) {
-        const filteredEl = await createHtmlElement();
-        productsEl.insertAdjacentHTML('beforeend', filteredEl.join(''));
-    }
-}
-
-//Removes page query string in url
+//Removes page query in url after filter products.
 const clearPagination = (query) => {
     pageFilter.reset();
     const re = /&?p=\d+&?/
-    return query.replace(re, '');
+    let replacedQuery = query.replace(re, '');
+    if(replacedQuery === '?') replacedQuery = '/';
+    return replacedQuery;
+}
+
+//Check filtered data is added to cart if it is change button style
+const filteredCartButtonEl = (product) => {
+    console.log(product)
+    const item = cart.items.find(item => item._id === product._id);
+    if(item) {
+        return `<div class="product-quantity">
+            <button id="decrease" class="product-quantity-dec product-quantity-btn">
+                <i class="fas fa-minus fa-sm"></i> 
+            </button><input type="Number" min="0" value="${item.quantity}" class="product-quantity-inp">
+            <button id="increase" class="product-quantity-inc product-quantity-btn">
+                <i class="fas fa-plus fa-sm"></i>
+            </button>
+        </div>`
+    } else return `<button class="btn btn-primary" id="addToCart">Add to Cart</button>`
+}
+
+//Check filtered data is added to wish if it is change heart icon style
+const filteredWishButtonEl = (product) => {
+    const item = wish.items.find(item => item._id === product._id);
+    if(item) {
+        return `<i class="fa fa-heart" id="addToWish" data-status="1"></i>`
+    } else return `<i class="far fa-heart" id="addToWish" data-status="0"></i>`
+
 }
 
 //Get data from database with query string and create html element
@@ -119,10 +155,12 @@ const createHtmlElement = async () => {
                 ${product.price}$
             </p>
             <div class="row align-center" id="prodQuantity">
-                <button class="btn btn-primary" id="addToCart">Add to Cart</button>
-                <i class="far fa-heart" id="addWish" data-status="0"></i>
+                ${filteredCartButtonEl(product)}
+                ${filteredWishButtonEl(product)}
             </div>
         </div>`
     })
     return filteredEl;
     }
+
+    

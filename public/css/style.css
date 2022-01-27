@@ -226,6 +226,9 @@ textarea {
     margin-right: .4rem;
 }
 
+.nav-small {
+    display: none;
+}
 /* || Header  */
 .header-background {
     position: relative;
@@ -434,7 +437,6 @@ textarea {
 
 footer {
     bottom: 0;
-    background-color: var(--clr-gray);
     font-size: var(--font-size-xxs);
     height: 16rem;
     width: 100%;
@@ -1039,12 +1041,20 @@ footer *{
     .navbar-link {
         color: #fff;
         font-size: var(--font-size-xs);
-        padding: .4rem;
+        padding: 1rem;
     }
 
     .logo {
         height: 2rem;
         margin-right: 1rem;
+    }
+
+    .nav-small {
+        display: flex;
+    }
+
+    .nav-big {
+        display: none;
     }
     /* Cart classes */
     .cart {

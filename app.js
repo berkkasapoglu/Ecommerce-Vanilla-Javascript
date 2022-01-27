@@ -2,7 +2,6 @@ const express = require('express');
 const engine = require('ejs-mate');
 const mongoose = require('mongoose');
 const Product = require('./models/product');
-const { collection } = require('./models/product');
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/Ecommerce')
@@ -54,9 +53,8 @@ function querySchema() {
         if(pmin && pmax) querySchema.price = { $gte: parseInt(pmin), $lte: parseInt(pmax)};
         else if(pmin) querySchema.price = { $gte: parseInt(pmin)}
         else if(pmax) querySchema.price = { $lte: parseInt(pmax)}
-
-        if(s) querySchema.title = s.split('-').join(' ');
-
+        
+        if(s) querySchema.title = new RegExp(`${s.split('-').join(' ')}`);
         res.querySchema = querySchema;
         next()
     }

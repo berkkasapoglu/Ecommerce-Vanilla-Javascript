@@ -1,6 +1,15 @@
 ## About The Project
 
-This project is e-commerce website made with vanilla javascript on frontend and express-mongoose on backend.
+This project is e-commerce website made with vanilla javascript on frontend and express-mongoDB on backend.
+
+## Features
+
+* Add,remove products to cart and wish
+* Update product quantity in cart
+* Filter products by category
+* Product pagination
+* Search products
+* View item page
 
 The user may add, remove, update, clear, and change quantity of each product from their shopping cart or wishlist.
 It is a responsive webpage and contains filter, contact form.

@@ -4,15 +4,16 @@ This project is e-commerce website made with vanilla javascript on frontend and 
 
 ## Features
 
-* Add,remove products to cart and wish
+* Add and remove products to cart and wish
 * Update product quantity in cart
-* Filter products by category
+* Filter products by category with url query
 * Product pagination
 * Search products
-* View item page
+* View product page
+* Responsive Design
+* View products in cart and wish
 
-The user may add, remove, update, clear, and change quantity of each product from their shopping cart or wishlist.
-It is a responsive webpage and contains filter, contact form.
+##Screenshots
 
 ![main](https://user-images.githubusercontent.com/75448998/151395939-cceeb88b-b4bf-4b4e-b418-d01fd58efcce.PNG)
 ![product](https://user-images.githubusercontent.com/75448998/151396015-86a8659c-f079-4d9f-adae-a30de315b0c5.PNG)
